@@ -21,7 +21,8 @@ export interface Base {
   admins: Admin[];
 }
 
-export const DOSSIER_DONNEES = process.env.SALMA_DATA_DIR ?? path.join(process.cwd(), "data");
+// Sur Vercel, seul /tmp est inscriptible (données de démonstration, réinitialisées au redémarrage)
+export const DOSSIER_DONNEES = process.env.SALMA_DATA_DIR ?? (process.env.VERCEL ? "/tmp/salma-data" : path.join(process.cwd(), "data"));
 const FICHIER = path.join(DOSSIER_DONNEES, "salma-db.json");
 
 export const ADMIN_PAR_DEFAUT = { email: "admin@salma.sn", motDePasse: "salma2026" };
