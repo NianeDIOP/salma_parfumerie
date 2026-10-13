@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { formatFCFA, type Produit } from "@/lib/catalogue";
 import { useCart } from "./cart";
 import { BagIcon, BoxIcon, ChatIcon, HeartIcon, PhoneIcon, TruckIcon } from "./icons";
@@ -16,10 +17,34 @@ export function ProductBuy({ produit: p }: { produit: Produit }) {
   const [qte, setQte] = useState(1);
   const c = p.contenances.find((x) => x.label === choix)!;
 
+  const [monte, setMonte] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- le portail n'existe que côté navigateur
+  useEffect(() => setMonte(true), []);
+
+  // Barre d'achat fixée en bas de l'écran sur mobile (comme dans une application)
+  const barre = (
+    <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-line bg-creme/95 px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 backdrop-blur-md md:hidden">
+      <div className="min-w-0">
+        <p className="truncate text-sm text-muted">
+          {p.nom} · {choix}
+        </p>
+        <p className="text-xl font-extrabold tabular-nums">{formatFCFA(c.prix)} F</p>
+      </div>
+      <button
+        onClick={() => add(p.slug, choix, qte)}
+        disabled={c.stock === 0}
+        className="ml-auto flex h-14 flex-1 items-center justify-center gap-2 rounded-full bg-bissap px-6 text-base font-semibold text-white active:scale-95 disabled:opacity-40"
+      >
+        <BagIcon className="size-5" /> Ajouter
+      </button>
+    </div>
+  );
+
   const message = encodeURIComponent(`Bonjour SALMA, j'aimerais un conseil sur ${p.nom} (${choix}).`);
 
   return (
     <div>
+      {monte && createPortal(barre, document.body)}
       {p.contenances.length > 1 && (
         <fieldset className="mt-6">
           <legend className="mb-2 text-sm font-semibold">Contenance</legend>
@@ -48,7 +73,7 @@ export function ProductBuy({ produit: p }: { produit: Produit }) {
         <span className="text-xs font-normal text-muted">FCFA · ou 3 × {formatFCFA(Math.ceil(c.prix / 3 / 100) * 100)} FCFA</span>
       </p>
 
-      <div className="mt-5 flex gap-2">
+      <div className="mt-5 hidden gap-2 md:flex">
         <div className="flex items-center border border-line">
           <button className="px-3 py-3" onClick={() => setQte(Math.max(1, qte - 1))} aria-label="Moins">
             −
@@ -84,17 +109,23 @@ export function ProductBuy({ produit: p }: { produit: Produit }) {
 
       <ul className="mt-6 space-y-2 border-t border-line pt-5 text-sm">
         <li className="flex items-center gap-2">
-          <TruckIcon className="size-4 text-bissap" /> <strong>Livré demain</strong> à Dakar si commandé avant 15 h
+          <TruckIcon className="size-4 shrink-0 text-bissap" />
+          <span>
+            <strong>Livré demain</strong> à Dakar si commandé avant 15 h
+          </span>
         </li>
         <li className="flex items-center gap-2">
           <BoxIcon className="size-4 text-bissap" />
           {c.stock === 0 ? "Rupture de stock" : c.stock <= 5 ? `Plus que ${c.stock} en stock` : `En stock · ${c.stock} disponibles`}
         </li>
         <li className="flex items-center gap-2">
-          <ChatIcon className="size-4 text-bissap" /> Une question ?{" "}
+          <ChatIcon className="size-4 shrink-0 text-bissap" />
+          <span>
+            Une question ?{" "}
           <a href={`https://wa.me/${WHATSAPP}?text=${message}`} target="_blank" rel="noopener noreferrer" className="underline">
             Conseillère sur WhatsApp
           </a>
+          </span>
         </li>
       </ul>
     </div>

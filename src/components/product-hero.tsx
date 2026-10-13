@@ -28,11 +28,11 @@ export function ProductHero({ produit: p, univers: u }: { produit: Produit; univ
         {p.marque} · {p.nom}
       </motion.p>
 
-      <div className="relative z-10 mx-auto grid max-w-7xl gap-10 px-4 pb-20 pt-8 md:px-8 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-6 px-4 pb-14 pt-4 md:gap-10 md:px-8 md:pb-20 md:pt-8 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
         {/* Galerie */}
         <div>
           <motion.div
-            className="relative aspect-[4/5] overflow-hidden rounded-t-[999px]"
+            className="relative mx-auto aspect-[4/5] w-[86%] overflow-hidden rounded-t-[999px] md:w-full"
             style={{ background: p.theme.accent }}
             initial={{ clipPath: "inset(100% 0 0 0)" }}
             animate={{ clipPath: "inset(0% 0 0 0)" }}
@@ -53,12 +53,12 @@ export function ProductHero({ produit: p, univers: u }: { produit: Produit; univ
             </motion.div>
           </motion.div>
           {p.images.length > 1 && (
-            <div className="mt-4 flex gap-3">
+            <div className="mt-4 flex justify-center gap-3 md:justify-start">
               {p.images.map((img, i) => (
                 <button
                   key={img}
                   onClick={() => setVue(i)}
-                  className={`relative size-20 overflow-hidden rounded-full ring-2 ring-offset-2 transition ${vue === i ? "" : "opacity-60 ring-transparent"}`}
+                  className={`relative size-14 overflow-hidden rounded-full md:size-20 ring-2 ring-offset-2 transition ${vue === i ? "" : "opacity-60 ring-transparent"}`}
                   style={{ ["--tw-ring-color" as string]: vue === i ? encre : "transparent", ["--tw-ring-offset-color" as string]: p.theme.bg }}
                   aria-label={`Vue ${i + 1}`}
                 >
@@ -87,10 +87,10 @@ export function ProductHero({ produit: p, univers: u }: { produit: Produit; univ
               </span>
             )}
           </motion.p>
-          <p className="mt-6 text-2xl font-semibold" style={{ color: p.theme.accent }}>
+          <p className="mt-4 text-xl font-semibold md:mt-6 md:text-2xl" style={{ color: p.theme.accent }}>
             {p.marque}
           </p>
-          <h1 className="mt-2 text-5xl font-extrabold leading-[0.9] tracking-tighter md:text-7xl">
+          <h1 className="mt-1 text-[44px] font-extrabold leading-[0.9] tracking-tighter md:text-7xl">
             <SplitText text={p.nom} delay={0.3} />
           </h1>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }}>
@@ -105,11 +105,11 @@ export function ProductHero({ produit: p, univers: u }: { produit: Produit; univ
                 {p.note} · {p.avis} avis vérifiés
               </span>
             </p>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed opacity-90">{p.description}</p>
+            <p className="mt-4 max-w-lg text-base leading-relaxed opacity-90 md:mt-6 md:text-lg">{p.description}</p>
           </motion.div>
 
           <motion.div
-            className="mt-8 rounded-3xl bg-creme p-6 text-ink shadow-2xl md:p-7"
+            className="mt-6 rounded-3xl bg-creme p-5 text-ink shadow-2xl md:mt-8 md:p-7"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.9, ease: [0.2, 0.7, 0.1, 1] }}

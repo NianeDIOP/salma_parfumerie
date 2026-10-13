@@ -18,7 +18,7 @@ function toggle<T>(list: T[], v: T) {
   return list.includes(v) ? list.filter((x) => x !== v) : [...list, v];
 }
 
-export function Catalogue({ produits }: { produits: Produit[] }) {
+export function Catalogue({ produits, titre }: { produits: Produit[]; titre?: string }) {
   const prixMax = Math.max(...produits.map(prixMin));
   const [fam, setFam] = useState<Famille[]>([]);
   const [gen, setGen] = useState<Genre[]>([]);
@@ -131,25 +131,50 @@ export function Catalogue({ produits }: { produits: Produit[] }) {
     </div>
   );
 
+  const chip = (actif: boolean) =>
+    `shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition active:scale-95 ${actif ? "border-ink bg-ink text-white" : "border-line bg-white"}`;
+
   return (
-    <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 md:px-8 lg:grid-cols-[220px_1fr]">
+    <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-10 px-4 pb-10 pt-4 md:px-8 md:py-10 lg:grid-cols-[220px_minmax(0,1fr)]">
       <aside className="hidden lg:block">
         <p className="mb-6 text-xl font-bold">Filtrer</p>
         {filtres}
       </aside>
 
-      <div>
-        <div className="mb-6 flex flex-wrap items-center gap-2">
-          <button onClick={() => setMobile(true)} className="border border-ink px-4 py-2 text-sm lg:hidden">
-            Filtrer {actifs.length > 0 && `(${actifs.length})`}
+      <div className="min-w-0">
+        {titre && <h2 className="mb-4 text-3xl font-extrabold tracking-tight md:mb-8 md:text-5xl">{titre}</h2>}
+
+        {/* Mobile : rangée de filtres rapides, fixée sous la barre du haut */}
+        <div className="no-scrollbar sticky top-[calc(56px+env(safe-area-inset-top))] z-30 -mx-4 mb-4 flex gap-2 overflow-x-auto bg-creme/95 px-4 py-3 backdrop-blur-md lg:hidden">
+          <button onClick={() => setMobile(true)} className={`${chip(actifs.length > 0)} flex items-center gap-1.5`}>
+            <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" aria-hidden>
+              <path d="M4 6h16M7 12h10M10 18h4" />
+            </svg>
+            Filtres{actifs.length > 0 && ` · ${actifs.length}`}
           </button>
+          {genres.map((g) => (
+            <button key={g} onClick={() => setGen(toggle(gen, g))} className={chip(gen.includes(g))}>
+              {g}
+            </button>
+          ))}
+          {famillesPresentes.map((f) => (
+            <button key={f} onClick={() => setFam(toggle(fam, f))} className={chip(fam.includes(f))}>
+              {f}
+            </button>
+          ))}
+        </div>
+
+        <div className="mb-5 flex flex-wrap items-center gap-2">
+          <p className="text-base text-muted">
+            {resultats.length} produit{resultats.length > 1 ? "s" : ""}
+          </p>
           {actifs.map((a) => (
-            <button key={a.label} onClick={a.retirer} className="flex items-center gap-1 border border-line bg-white px-3 py-1.5 text-xs">
+            <button key={a.label} onClick={a.retirer} className="hidden items-center gap-1 rounded-full border border-line bg-white px-3 py-1.5 text-sm lg:flex">
               {a.label} <CloseIcon className="size-3" />
             </button>
           ))}
-          <label className="ml-auto flex items-center gap-2 text-sm">
-            <span className="text-muted">Trier :</span>
+          <label className="ml-auto flex items-center gap-2 text-base">
+            <span className="hidden text-muted sm:inline">Trier :</span>
             <select value={tri} onChange={(e) => setTri(e.target.value as Tri)} className="bg-transparent font-semibold outline-none">
               {tris.map((t) => (
                 <option key={t.value} value={t.value}>
@@ -160,14 +185,10 @@ export function Catalogue({ produits }: { produits: Produit[] }) {
           </label>
         </div>
 
-        <p className="mb-4 text-sm text-muted">
-          {resultats.length} produit{resultats.length > 1 ? "s" : ""}
-        </p>
-
         {resultats.length === 0 ? (
           <p className="py-20 text-center text-muted">Aucun produit ne correspond à ces filtres.</p>
         ) : (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:gap-x-6 xl:grid-cols-3">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:gap-x-6 md:gap-y-12 xl:grid-cols-3">
             {resultats.map((p, i) => (
               <ProductCard key={p.slug} produit={p} index={i} />
             ))}
@@ -181,18 +202,19 @@ export function Catalogue({ produits }: { produits: Produit[] }) {
         onClick={() => setMobile(false)}
       />
       <div
-        className={`fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto bg-creme p-6 transition-transform duration-500 lg:hidden ${
+        className={`fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-3xl bg-creme p-6 pb-[max(24px,env(safe-area-inset-bottom))] transition-transform duration-300 lg:hidden ${
           mobile ? "translate-y-0" : "translate-y-full"
         }`}
       >
+        <span className="mx-auto -mt-2 mb-4 block h-1.5 w-12 rounded-full bg-line" aria-hidden />
         <div className="mb-6 flex items-center justify-between">
-          <p className="text-xl font-bold">Filtrer</p>
+          <p className="text-2xl font-bold">Filtrer</p>
           <button onClick={() => setMobile(false)} aria-label="Fermer">
             <CloseIcon />
           </button>
         </div>
         {filtres}
-        <button onClick={() => setMobile(false)} className="mt-8 w-full bg-ink py-4 text-sm font-semibold text-white">
+        <button onClick={() => setMobile(false)} className="mt-8 w-full rounded-full bg-ink py-4 text-base font-semibold text-white">
           Voir {resultats.length} produit{resultats.length > 1 ? "s" : ""}
         </button>
       </div>

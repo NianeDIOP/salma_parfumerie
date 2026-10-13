@@ -5,10 +5,10 @@ const paiements = ["Wave", "Orange Money", "Free Money", "Visa", "Mastercard", "
 
 export function Footer() {
   return (
-    <footer className="mt-32 overflow-hidden bg-ink text-white">
-      <div className="mx-auto max-w-7xl px-4 py-16 md:px-8">
-        <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
-          <div>
+    <footer className="mt-16 overflow-hidden bg-ink text-white md:mt-32">
+      <div className="mx-auto max-w-7xl px-4 py-12 md:px-8 md:py-16">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-12">
+          <div className="col-span-2 md:col-span-1">
             <p className="text-4xl font-extrabold tracking-tight">salma</p>
             <p className="mt-4 max-w-xs text-sm text-white/60">
               Maison de parfum à Dakar. Parfums, huiles parfumées, cosmétiques et senteurs d&apos;intérieur.
@@ -27,7 +27,7 @@ export function Footer() {
 
           <div>
             <p className="text-lg font-bold">Boutique</p>
-            <ul className="mt-4 space-y-2 text-sm">
+            <ul className="mt-4 space-y-3 text-base md:space-y-2 md:text-sm">
               {univers.map((u) => (
                 <li key={u.slug}>
                   <Link href={`/${u.slug}`} className="text-white/80 hover:text-white">
@@ -45,7 +45,7 @@ export function Footer() {
 
           <div>
             <p className="text-lg font-bold">Expériences</p>
-            <ul className="mt-4 space-y-2 text-sm text-white/80">
+            <ul className="mt-4 space-y-3 text-base text-white/80 md:space-y-2 md:text-sm">
               <li>
                 <Link href="/quiz" className="hover:text-white">
                   Quiz « Ma Signature »
@@ -57,9 +57,9 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="col-span-2 md:col-span-1">
             <p className="text-lg font-bold">Service</p>
-            <ul className="mt-4 space-y-2 text-sm text-white/80">
+            <ul className="mt-4 space-y-3 text-base text-white/80 md:space-y-2 md:text-sm">
               <li>Livraison & retours</li>
               <li>FAQ</li>
               <li>Contact & WhatsApp</li>
@@ -69,7 +69,7 @@ export function Footer() {
         </div>
 
         <p
-          className="mt-20 select-none bg-gradient-to-b from-white/90 to-white/5 bg-clip-text text-center text-[27vw] font-extrabold leading-[0.8] tracking-tighter text-transparent md:text-[22vw]"
+          className="mt-12 select-none md:mt-20 bg-gradient-to-b from-white/90 to-white/5 bg-clip-text text-center text-[27vw] font-extrabold leading-[0.8] tracking-tighter text-transparent md:text-[22vw]"
           aria-hidden
         >
           salma

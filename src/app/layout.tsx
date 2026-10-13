@@ -3,7 +3,8 @@ import { JetBrains_Mono, Schibsted_Grotesk } from "next/font/google";
 import { CartProvider } from "@/components/cart";
 import { CartDrawer } from "@/components/cart-drawer";
 import { Footer } from "@/components/footer";
-import { AnnouncementBar, Header } from "@/components/header";
+import { BottomNav } from "@/components/bottom-nav";
+import { Header } from "@/components/header";
 import { Cursor } from "@/components/motion/cursor";
 import { MotionProviders } from "@/components/motion/providers";
 import "./globals.css";
@@ -25,22 +26,24 @@ export const metadata: Metadata = {
   },
   description:
     "Parfums, huiles parfumées, cosmétiques et senteurs d'intérieur. Livraison 24 h à Dakar, paiement Wave, Orange Money, Free Money ou carte.",
+  appleWebApp: { capable: true, title: "SALMA", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#a8153a",
+  themeColor: "#f1efea",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fr" className={`${grotesk.variable} ${code.variable} antialiased`}>
-      <body className="flex min-h-screen flex-col">
+      <body className="flex min-h-screen flex-col pb-[calc(84px+env(safe-area-inset-bottom))] md:pb-0">
         <MotionProviders>
           <CartProvider>
-            <AnnouncementBar />
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
+            <BottomNav />
             <CartDrawer />
             <Cursor />
           </CartProvider>

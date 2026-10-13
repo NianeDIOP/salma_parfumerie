@@ -20,10 +20,13 @@ interface CartContextValue {
   update: (slug: string, contenance: string, quantite: number) => void;
   remove: (slug: string, contenance: string) => void;
   clear: () => void;
+  favoris: string[];
+  toggleFavori: (slug: string) => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "salma-panier";
+const FAVORIS_KEY = "salma-favoris";
 
 export function prixLigne(line: CartLine) {
   const produit = getProduit(line.slug);
@@ -36,6 +39,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [bump, setBump] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const [favoris, setFavoris] = useState<string[]>([]);
 
   // Sauvegarde du panier (exigence « sauvegarde du panier » du cahier des charges)
   useEffect(() => {
@@ -43,6 +47,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const saved = localStorage.getItem(STORAGE_KEY);
       // eslint-disable-next-line react-hooks/set-state-in-effect -- lecture unique au montage
       if (saved) setLines(JSON.parse(saved));
+      const favs = localStorage.getItem(FAVORIS_KEY);
+      if (favs) setFavoris(JSON.parse(favs));
     } catch {}
     setLoaded(true);
   }, []);
@@ -51,8 +57,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (!loaded) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
+      localStorage.setItem(FAVORIS_KEY, JSON.stringify(favoris));
     } catch {}
-  }, [lines, loaded]);
+  }, [lines, favoris, loaded]);
+
+  const toggleFavori = useCallback((slug: string) => {
+    setFavoris((prev) => (prev.includes(slug) ? prev.filter((s) => s !== slug) : [slug, ...prev]));
+  }, []);
 
   const add = useCallback((slug: string, contenance: string, quantite = 1) => {
     setLines((prev) => {
@@ -90,10 +101,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       update,
       remove,
       clear,
+      favoris,
+      toggleFavori,
       count: lines.reduce((n, l) => n + l.quantite, 0),
       total: lines.reduce((n, l) => n + prixLigne(l), 0),
     }),
-    [lines, open, bump, add, update, remove, clear],
+    [lines, open, bump, add, update, remove, clear, favoris, toggleFavori],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

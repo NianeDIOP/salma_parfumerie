@@ -60,6 +60,7 @@ src/
 │   ├── page.tsx                 Accueil (maquette 1)
 │   ├── [univers]/page.tsx       Catalogue avec filtres (maquette 2)
 │   ├── [univers]/[slug]/        Fiche produit (maquette 3)
+│   ├── boutique/ · favoris/      Onglets de la version mobile
 │   ├── quiz/                    Quiz « Ma Signature »
 │   └── panier/                  Panier → livraison → paiement → confirmation (maquette 4)
 ├── components/                  Hero, motion design, cartes produit, panier, recherche…
@@ -76,5 +77,6 @@ src/
 - [ ] Paiements réels : agrégateur Mobile Money (Wave, Orange Money, Free Money) + cartes
 - [ ] Compte client (connexion par SMS), Cercle SALMA, avis vérifiés, coffrets personnalisés
 - [ ] Notifications SMS / WhatsApp / e-mail, application livreur
-- [ ] PWA installable, multilingue FR / EN / wolof, multi-devises
+- [x] Version mobile façon application : barre d'onglets en bas, barre du haut avec retour, rangées défilantes, barre d'achat fixe, favoris, site installable (PWA)
+- [ ] Multilingue FR / EN / wolof, multi-devises, notifications push
 - [ ] Applications natives iOS & Android, live shopping, espace pro

@@ -109,3 +109,19 @@ body {
     transform: none;
   }
 }
+
+/* Sensation d'application sur mobile */
+html {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+button,
+a {
+  touch-action: manipulation;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
