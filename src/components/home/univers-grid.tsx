@@ -2,12 +2,12 @@ import Link from "next/link";
 import { Photo } from "@/components/photo";
 import type { Univers } from "@/lib/catalogue";
 
-export function UniversGrid({ univers, compte }: { univers: Univers[]; compte: Record<string, number> }) {
+export function UniversGrid({ univers, compte, titre = "Quatre", titreAccent = "univers." }: { univers: Univers[]; compte: Record<string, number>; titre?: string; titreAccent?: string }) {
   return (
     <section className="bg-ink py-24 text-white md:py-32">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <h2 className="text-6xl font-extrabold leading-[0.9] tracking-tighter md:text-8xl">
-          Quatre <span className="text-rose">univers.</span>
+          {titre} <span className="text-rose">{titreAccent}</span>
         </h2>
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {univers.map((u, i) => (

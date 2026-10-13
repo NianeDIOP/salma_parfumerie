@@ -2,13 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { univers } from "@/lib/catalogue";
 import { useCart } from "./cart";
-
-const slugsUnivers = univers.map((u) => u.slug as string);
+import { useSite } from "./site-provider";
 
 // Pages où une barre d'action propre remplace les onglets (fiche produit, commande, quiz)
-function sansOnglets(pathname: string) {
+function sansOnglets(pathname: string, slugsUnivers: string[]) {
   const seg = pathname.split("/").filter(Boolean);
   return (seg.length === 2 && slugsUnivers.includes(seg[0])) || pathname === "/panier" || pathname === "/quiz";
 }
@@ -30,7 +28,10 @@ const ICONES = {
 export function BottomNav() {
   const pathname = usePathname();
   const { count, favoris, setOpen } = useCart();
-  if (sansOnglets(pathname)) return null;
+  const { univers, reglages } = useSite();
+  const slugsUnivers = univers.map((u) => u.slug);
+  const t = reglages.mobile.onglets;
+  if (sansOnglets(pathname, slugsUnivers)) return null;
 
   const actif = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href) || (href === "/boutique" && slugsUnivers.some((s) => pathname.startsWith(`/${s}`))));
 
@@ -50,25 +51,25 @@ export function BottomNav() {
       className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-creme/95 pb-[max(8px,env(safe-area-inset-bottom))] backdrop-blur-md md:hidden"
       aria-label="Navigation principale"
     >
-      {onglet("/", "Accueil", ICONES.accueil)}
-      {onglet("/boutique", "Boutique", ICONES.boutique)}
+      {onglet("/", t.accueil, ICONES.accueil)}
+      {onglet("/boutique", t.boutique, ICONES.boutique)}
       <Link href="/quiz" className="flex flex-1 flex-col items-center" aria-label="Quiz Ma Signature">
         <span className="-mt-5 grid size-14 place-items-center rounded-full bg-bissap text-white shadow-lg shadow-bissap/30 ring-4 ring-creme">
           <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" aria-hidden>
             <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6" />
           </svg>
         </span>
-        <span className="mt-0.5 text-[11px] font-medium text-ink/60">Signature</span>
+        <span className="mt-0.5 text-[11px] font-medium text-ink/60">{t.signature}</span>
       </Link>
       {onglet(
         "/favoris",
-        "Favoris",
+        t.favoris,
         ICONES.favoris,
         favoris.length > 0 && <span className="absolute right-[calc(50%-18px)] top-1.5 size-2 rounded-full bg-bissap" />,
       )}
       <button onClick={() => setOpen(true)} className="relative flex flex-1 flex-col items-center gap-0.5 pt-2 text-[11px] font-medium text-ink/60">
         <Icone d={ICONES.panier} />
-        Panier
+        {t.panier}
         {count > 0 && (
           <span className="absolute right-[calc(50%-22px)] top-1 grid min-w-[18px] place-items-center rounded-full bg-bissap px-1 text-[11px] font-bold leading-[18px] text-white">
             {count}

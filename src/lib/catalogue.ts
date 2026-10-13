@@ -1,8 +1,10 @@
-// Catalogue de démonstration.
-// Photos : Unsplash (licence libre, usage commercial autorisé). Prix et stocks indicatifs,
-// à remplacer par les données réelles de SALMA via l'API e-commerce (phase back-office).
+// Types du catalogue, fonctions utilitaires et données de départ.
+// Les données vivantes sont dans la base (src/lib/db.ts) et se gèrent depuis /admin ;
+// les tableaux « seed » ci-dessous ne servent qu'à remplir la base au premier lancement.
+// Photos : Unsplash (licence libre, usage commercial autorisé).
 
-export type UniversSlug = "parfums" | "huiles" | "cosmetiques" | "maison";
+// Les univers sont gérables depuis l'admin : leur identifiant est une chaîne libre.
+export type UniversSlug = string;
 
 export type Famille = "Oriental" | "Boisé" | "Floral" | "Ambré" | "Frais / Hespéridé" | "Fruité" | "Musqué";
 
@@ -48,6 +50,10 @@ export interface Produit {
   /** identifiants de photos Unsplash (images.unsplash.com/photo-…) */
   images: string[];
   theme: Theme;
+  /** visible sur le site public */
+  publie?: boolean;
+  /** alerte de stock en dessous de ce seuil */
+  seuilAlerte?: number;
 }
 
 export interface Univers {
@@ -59,7 +65,7 @@ export interface Univers {
   theme: Theme;
 }
 
-export const univers: Univers[] = [
+export const seedUnivers: Univers[] = [
   {
     slug: "parfums",
     nom: "Parfums",
@@ -618,7 +624,7 @@ const maison: Produit[] = [
   },
 ];
 
-export const produits: Produit[] = [...parfums, ...huiles, ...cosmetiques, ...maison];
+export const seedProduits: Produit[] = [...parfums, ...huiles, ...cosmetiques, ...maison];
 
 // Visuels éditoriaux (ambiances)
 export const ambiances = {
@@ -630,32 +636,23 @@ export const familles: Famille[] = ["Oriental", "Boisé", "Floral", "Ambré", "F
 export const genres: Genre[] = ["Femme", "Homme", "Mixte"];
 export const occasions: Occasion[] = ["Soirée", "Bureau", "Cérémonie", "Quotidien", "Tabaski"];
 
-export function getUnivers(slug: string) {
-  return univers.find((u) => u.slug === slug);
-}
-
-export function getProduit(slug: string) {
-  return produits.find((p) => p.slug === slug);
-}
-
-export function produitsDeUnivers(slug: UniversSlug) {
-  return produits.filter((p) => p.univers === slug);
-}
-
 export function prixMin(p: Produit) {
   return Math.min(...p.contenances.map((c) => c.prix));
 }
 
-export function bestSellers() {
-  return [...produits].sort((a, b) => b.avis - a.avis).slice(0, 8);
+export function stockTotal(p: Produit) {
+  return p.contenances.reduce((n, c) => n + c.stock, 0);
 }
 
-export function produitsAssocies(p: Produit) {
-  return produits.filter((x) => x.slug !== p.slug && (x.famille === p.famille || x.univers === p.univers)).slice(0, 4);
+export function bestSellers(liste: Produit[], n = 8) {
+  return [...liste].sort((a, b) => b.avis - a.avis).slice(0, n);
+}
+
+export function produitsAssocies(liste: Produit[], p: Produit) {
+  return liste.filter((x) => x.slug !== p.slug && (x.famille === p.famille || x.univers === p.univers)).slice(0, 4);
 }
 
 export function formatFCFA(montant: number) {
   return new Intl.NumberFormat("fr-FR").format(montant).replace(/ | /g, " ");
 }
 
-export const LIVRAISON_OFFERTE_DES = 30000;

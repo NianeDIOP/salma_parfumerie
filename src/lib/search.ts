@@ -1,4 +1,4 @@
-import { produits, type Produit } from "./catalogue";
+import type { Produit } from "./catalogue";
 
 export function normaliser(s: string) {
   return s
@@ -32,12 +32,11 @@ function indexer(p: Produit) {
   return normaliser(texte).split(/\s+/).filter(Boolean);
 }
 
-const index = produits.map((p) => ({ produit: p, mots: indexer(p), nom: normaliser(p.nom) }));
-
-export function rechercher(requete: string): Produit[] {
+export function rechercher(produits: Produit[], requete: string): Produit[] {
   const mots = normaliser(requete).split(/\s+/).filter(Boolean);
   if (!mots.length) return [];
-  return index
+  return produits
+    .map((p) => ({ produit: p, mots: indexer(p), nom: normaliser(p.nom) }))
     .filter((e) => mots.every((m) => motCorrespond(m, e.mots)))
     .sort((a, b) => Number(b.nom.includes(mots[0])) - Number(a.nom.includes(mots[0])))
     .map((e) => e.produit);

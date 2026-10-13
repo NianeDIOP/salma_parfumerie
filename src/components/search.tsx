@@ -5,12 +5,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { formatFCFA, prixMin } from "@/lib/catalogue";
 import { rechercher, suggestions } from "@/lib/search";
 import { Photo } from "./photo";
+import { useSite } from "./site-provider";
 import { CloseIcon, SearchIcon } from "./icons";
 
 export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [q, setQ] = useState("");
   const input = useRef<HTMLInputElement>(null);
-  const resultats = useMemo(() => rechercher(q), [q]);
+  const { produits } = useSite();
+  const resultats = useMemo(() => rechercher(produits, q), [produits, q]);
 
   useEffect(() => {
     if (!open) return;

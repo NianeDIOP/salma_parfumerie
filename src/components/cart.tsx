@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { getProduit } from "@/lib/catalogue";
+import { useSite } from "./site-provider";
 
 export interface CartLine {
   slug: string;
@@ -20,6 +20,7 @@ interface CartContextValue {
   update: (slug: string, contenance: string, quantite: number) => void;
   remove: (slug: string, contenance: string) => void;
   clear: () => void;
+  prixLigne: (line: CartLine) => number;
   favoris: string[];
   toggleFavori: (slug: string) => void;
 }
@@ -28,13 +29,16 @@ const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "salma-panier";
 const FAVORIS_KEY = "salma-favoris";
 
-export function prixLigne(line: CartLine) {
-  const produit = getProduit(line.slug);
-  const c = produit?.contenances.find((x) => x.label === line.contenance);
-  return (c?.prix ?? 0) * line.quantite;
-}
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
+  const { getProduit } = useSite();
+  const prixLigne = useCallback(
+    (line: CartLine) => {
+      const c = getProduit(line.slug)?.contenances.find((x) => x.label === line.contenance);
+      return (c?.prix ?? 0) * line.quantite;
+    },
+    [getProduit],
+  );
   const [lines, setLines] = useState<CartLine[]>([]);
   const [open, setOpen] = useState(false);
   const [bump, setBump] = useState(0);
@@ -46,11 +50,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       // eslint-disable-next-line react-hooks/set-state-in-effect -- lecture unique au montage
-      if (saved) setLines(JSON.parse(saved));
+      if (saved) setLines((JSON.parse(saved) as CartLine[]).filter((l) => getProduit(l.slug)));
       const favs = localStorage.getItem(FAVORIS_KEY);
       if (favs) setFavoris(JSON.parse(favs));
     } catch {}
     setLoaded(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- lecture unique au montage
   }, []);
 
   useEffect(() => {
@@ -103,10 +108,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       clear,
       favoris,
       toggleFavori,
+      prixLigne,
       count: lines.reduce((n, l) => n + l.quantite, 0),
       total: lines.reduce((n, l) => n + prixLigne(l), 0),
     }),
-    [lines, open, bump, add, update, remove, clear, favoris, toggleFavori],
+    [lines, open, bump, add, update, remove, clear, favoris, toggleFavori, prixLigne],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

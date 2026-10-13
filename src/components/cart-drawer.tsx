@@ -2,13 +2,18 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { formatFCFA, getProduit, LIVRAISON_OFFERTE_DES } from "@/lib/catalogue";
+import { formatFCFA } from "@/lib/catalogue";
 import { Photo } from "./photo";
-import { prixLigne, useCart } from "./cart";
+import { useCart } from "./cart";
+import { useSite } from "./site-provider";
 import { CloseIcon } from "./icons";
 
 export function CartDrawer() {
-  const { lines, open, setOpen, total, update } = useCart();
+  const { lines, open, setOpen, total, update, prixLigne } = useCart();
+  const { getProduit, reglages } = useSite();
+  // Seuil de livraison offerte de la zone principale (géré dans l'admin)
+  const zone = reglages.livraison.zones.find((z) => z.actif && z.gratuiteDes);
+  const LIVRAISON_OFFERTE_DES = zone?.gratuiteDes ?? 0;
   const reste = Math.max(0, LIVRAISON_OFFERTE_DES - total);
 
   useEffect(() => {
@@ -40,15 +45,15 @@ export function CartDrawer() {
           </button>
         </div>
 
-        {lines.length > 0 && (
+        {lines.length > 0 && LIVRAISON_OFFERTE_DES > 0 && (
           <div className="border-b border-line px-6 py-4">
             <p className="text-sm">
               {reste > 0 ? (
                 <>
-                  Plus que <strong>{formatFCFA(reste)} FCFA</strong> pour la livraison offerte à Dakar
+                  Plus que <strong>{formatFCFA(reste)} FCFA</strong> pour la livraison offerte ({zone?.label})
                 </>
               ) : (
-                <strong className="text-sauge">Livraison offerte à Dakar !</strong>
+                <strong className="text-sauge">Livraison offerte !</strong>
               )}
             </p>
             <div className="mt-2 h-1 bg-line">
@@ -65,7 +70,7 @@ export function CartDrawer() {
             <div className="grid h-full place-items-center text-center">
               <div>
                 <p className="text-lg font-semibold">Votre panier est vide</p>
-                <p className="mt-1 text-sm text-muted">Laissez-vous guider par nos univers olfactifs.</p>
+                <p className="mt-1 text-sm text-muted">{reglages.boutique.texteVide}</p>
                 <Link
                   href="/quiz"
                   onClick={() => setOpen(false)}

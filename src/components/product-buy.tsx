@@ -5,12 +5,14 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { formatFCFA, type Produit } from "@/lib/catalogue";
 import { useCart } from "./cart";
+import { useSite } from "./site-provider";
 import { BagIcon, BoxIcon, ChatIcon, HeartIcon, PhoneIcon, TruckIcon } from "./icons";
 
-const WHATSAPP = "221775665335";
 
 export function ProductBuy({ produit: p }: { produit: Produit }) {
   const { add, setOpen } = useCart();
+  const { reglages } = useSite();
+  const WHATSAPP = reglages.contact.whatsapp.replace(/\D/g, "");
   const router = useRouter();
   const defaut = p.contenances.find((c) => c.label === "50 ml" && c.stock > 0) ?? p.contenances.find((c) => c.stock > 0) ?? p.contenances[0];
   const [choix, setChoix] = useState(defaut.label);
@@ -70,7 +72,9 @@ export function ProductBuy({ produit: p }: { produit: Produit }) {
         <span key={choix} className="inline-block animate-fade-up">
           {formatFCFA(c.prix)}
         </span>{" "}
-        <span className="text-xs font-normal text-muted">FCFA · ou 3 × {formatFCFA(Math.ceil(c.prix / 3 / 100) * 100)} FCFA</span>
+        <span className="text-xs font-normal text-muted">
+          FCFA{reglages.boutique.paiementEnPlusieursFois && ` · ou 3 × ${formatFCFA(Math.ceil(c.prix / 3 / 100) * 100)} FCFA`}
+        </span>
       </p>
 
       <div className="mt-5 hidden gap-2 md:flex">

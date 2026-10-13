@@ -7,12 +7,12 @@ import { useCart } from "@/components/cart";
 import { Photo } from "@/components/photo";
 import { formatFCFA, prixMin, type Produit } from "@/lib/catalogue";
 
-const DUREE = 6000;
 const ease = [0.25, 0.8, 0.25, 1] as const;
 
 // Hero : chaque parfum vedette impose sa couleur à la scène.
 // Changement de parfum instantané au clic (transitions courtes, sans attente).
-export function Hero({ slides }: { slides: Produit[] }) {
+export function Hero({ slides, duree = 6, bouton = "Découvrir" }: { slides: Produit[]; duree?: number; bouton?: string }) {
+  const DUREE = Math.max(2, duree) * 1000;
   const [index, setIndex] = useState(0);
   const [sens, setSens] = useState(1);
   const { add } = useCart();
@@ -34,7 +34,7 @@ export function Hero({ slides }: { slides: Produit[] }) {
     // Défilement automatique : le minuteur repart à chaque changement de parfum
     const t = setTimeout(() => aller(index + 1, 1), DUREE);
     return () => clearTimeout(t);
-  }, [index, aller]);
+  }, [index, aller, DUREE]);
 
   return (
     <section
@@ -72,7 +72,7 @@ export function Hero({ slides }: { slides: Produit[] }) {
                   className="inline-flex flex-1 items-center justify-center gap-3 rounded-full px-6 py-4 text-base font-semibold transition-transform active:scale-95 md:flex-none md:px-8 md:hover:scale-[1.03]"
                   style={{ background: encre, color: p.theme.bg }}
                 >
-                  Découvrir <span aria-hidden>→</span>
+                  {bouton} <span aria-hidden>→</span>
                 </Link>
                 <button
                   onClick={() => add(p.slug, p.contenances[0].label)}

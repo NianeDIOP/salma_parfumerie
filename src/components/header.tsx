@@ -6,14 +6,7 @@ import { useEffect, useState } from "react";
 import { useCart } from "./cart";
 import { BagIcon, HeartIcon, SearchIcon, SparkIcon, UserIcon } from "./icons";
 import { SearchOverlay } from "./search";
-
-const nav = [
-  { href: "/parfums", label: "Parfums" },
-  { href: "/huiles", label: "Huiles parfumées" },
-  { href: "/cosmetiques", label: "Cosmétiques" },
-  { href: "/maison", label: "Maison" },
-  { href: "/coffrets", label: "Coffrets" },
-];
+import { useSite } from "./site-provider";
 
 // Titres affichés dans la barre d'application mobile
 const titres: Record<string, string> = {
@@ -23,10 +16,6 @@ const titres: Record<string, string> = {
   "/quiz": "Ma Signature",
   "/compte": "Mon compte",
   "/coffrets": "Coffrets",
-  "/parfums": "Parfums",
-  "/huiles": "Huiles parfumées",
-  "/cosmetiques": "Cosmétiques",
-  "/maison": "Maison",
 };
 
 export function Header() {
@@ -36,8 +25,16 @@ export function Header() {
   const [search, setSearch] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [pulse, setPulse] = useState(false);
+  const { reglages, univers } = useSite();
+  const { identite, entete } = reglages;
+  const nav = entete.liens;
   const accueil = pathname === "/";
-  const titre = titres[pathname] ?? titres["/" + pathname.split("/")[1]];
+  const seg = "/" + pathname.split("/")[1];
+  const titre =
+    titres[pathname] ??
+    univers.find((u) => `/${u.slug}` === seg)?.nom ??
+    reglages.pages.find((p) => pathname === `/pages/${p.slug}`)?.titre ??
+    titres[seg];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -91,9 +88,9 @@ export function Header() {
         {/* Barre d'application mobile */}
         <div className="flex h-14 items-center gap-2 px-2 md:hidden">
           {accueil ? (
-            <Link href="/" className="flex items-baseline gap-1 px-2" aria-label="SALMA Fragrance, accueil">
-              <span className="text-[26px] font-extrabold tracking-tight">salma</span>
-              <span className="text-sm text-muted">fragrance</span>
+            <Link href="/" className="flex items-baseline gap-1 px-2" aria-label={`${identite.nom}, accueil`}>
+              <span className="text-[26px] font-extrabold tracking-tight">{identite.logo}</span>
+              <span className="text-sm text-muted">{identite.sousTitre}</span>
             </Link>
           ) : (
             <>
@@ -106,7 +103,7 @@ export function Header() {
                   <path d="M15 5l-7 7 7 7" />
                 </svg>
               </button>
-              <p className="min-w-0 flex-1 truncate text-lg font-bold">{titre ?? <span className="font-extrabold tracking-tight">salma</span>}</p>
+              <p className="min-w-0 flex-1 truncate text-lg font-bold">{titre ?? <span className="font-extrabold tracking-tight">{identite.logo}</span>}</p>
             </>
           )}
           <div className="ml-auto flex items-center">
@@ -122,17 +119,17 @@ export function Header() {
 
         {/* En-tête ordinateur */}
         <div className="mx-auto hidden h-[72px] max-w-7xl items-center gap-6 px-8 md:flex">
-          <Link href="/" className="flex items-baseline gap-1.5" aria-label="SALMA Fragrance, accueil">
-            <span className="text-[28px] font-extrabold tracking-tight">salma</span>
-            <span className="text-sm text-muted">fragrance</span>
+          <Link href="/" className="flex items-baseline gap-1.5" aria-label={`${identite.nom}, accueil`}>
+            <span className="text-[28px] font-extrabold tracking-tight">{identite.logo}</span>
+            <span className="text-sm text-muted">{identite.sousTitre}</span>
           </Link>
 
           <nav className="ml-6 flex items-center gap-7 text-[15px]">
             {nav.map((item) => {
-              const active = pathname.startsWith(item.href);
+              const active = item.href !== "/" && pathname.startsWith(item.href);
               return (
                 <Link
-                  key={item.href}
+                  key={item.href + item.label}
                   href={item.href}
                   className={`relative hidden py-1 transition-colors hover:text-bissap lg:block ${active ? "text-bissap" : ""}`}
                 >
@@ -144,25 +141,31 @@ export function Header() {
             <Link href="/boutique" className="py-1 transition-colors hover:text-bissap lg:hidden">
               Boutique
             </Link>
-            <Link
-              href="/quiz"
-              className="flex items-center gap-1.5 rounded-full bg-rose px-4 py-1.5 font-medium text-bissap transition hover:bg-bissap hover:text-white"
-            >
-              <SparkIcon className="size-4" />
-              Ma Signature
-            </Link>
+            {entete.bouton.visible && (
+              <Link
+                href={entete.bouton.href}
+                className="flex items-center gap-1.5 rounded-full bg-rose px-4 py-1.5 font-medium text-bissap transition hover:bg-bissap hover:text-white"
+              >
+                <SparkIcon className="size-4" />
+                {entete.bouton.label}
+              </Link>
+            )}
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
             <button className="grid size-11 place-items-center rounded-full transition hover:bg-line" onClick={() => setSearch(true)} aria-label="Rechercher">
               <SearchIcon />
             </button>
-            <Link href="/compte" className="grid size-11 place-items-center rounded-full transition hover:bg-line" aria-label="Mon compte">
-              <UserIcon />
-            </Link>
-            <Link href="/favoris" className="grid size-11 place-items-center rounded-full transition hover:bg-line" aria-label="Mes favoris">
-              <HeartIcon />
-            </Link>
+            {entete.afficherCompte && (
+              <Link href="/compte" className="grid size-11 place-items-center rounded-full transition hover:bg-line" aria-label="Mon compte">
+                <UserIcon />
+              </Link>
+            )}
+            {entete.afficherFavoris && (
+              <Link href="/favoris" className="grid size-11 place-items-center rounded-full transition hover:bg-line" aria-label="Mes favoris">
+                <HeartIcon />
+              </Link>
+            )}
             <button className="relative grid size-11 place-items-center rounded-full transition hover:bg-line" onClick={() => setOpen(true)} aria-label={`Panier (${count})`}>
               <BagIcon />
               {badge}

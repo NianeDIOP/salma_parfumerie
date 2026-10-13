@@ -1,10 +1,12 @@
+"use client";
+
 import Link from "next/link";
-import { getProduit } from "@/lib/catalogue";
+import { useSite } from "./site-provider";
 import { Photo } from "./photo";
 
-const vitrine = ["coco-mademoiselle", "bougie-baobab", "huile-thiouraye"].map((s) => getProduit(s)!);
-
 export function ComingSoon({ titre, texte }: { titre: string; texte: string }) {
+  const { produits } = useSite();
+  const vitrine = produits.slice(0, 3);
   return (
     <section className="mx-auto flex max-w-2xl flex-col items-center px-4 py-24 text-center">
       <div className="flex items-end gap-3">

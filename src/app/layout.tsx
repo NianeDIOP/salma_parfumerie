@@ -1,53 +1,48 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono, Schibsted_Grotesk } from "next/font/google";
-import { CartProvider } from "@/components/cart";
-import { CartDrawer } from "@/components/cart-drawer";
-import { Footer } from "@/components/footer";
-import { BottomNav } from "@/components/bottom-nav";
-import { Header } from "@/components/header";
-import { Cursor } from "@/components/motion/cursor";
+import { Bricolage_Grotesque, DM_Sans, JetBrains_Mono, Playfair_Display, Schibsted_Grotesk } from "next/font/google";
 import { MotionProviders } from "@/components/motion/providers";
+import { lireBase } from "@/lib/db";
+import type { Reglages } from "@/lib/site";
 import "./globals.css";
 
-const grotesk = Schibsted_Grotesk({
-  variable: "--font-grotesk",
-  subsets: ["latin"],
-});
+// Toutes les pages lisent la base à chaque visite : une modification faite dans l'admin
+// apparaît immédiatement sur le site.
+export const dynamic = "force-dynamic";
 
-const code = JetBrains_Mono({
-  variable: "--font-code",
-  subsets: ["latin"],
-});
+const schibsted = Schibsted_Grotesk({ variable: "--font-schibsted", subsets: ["latin"] });
+const bricolage = Bricolage_Grotesque({ variable: "--font-bricolage", subsets: ["latin"], preload: false });
+const playfair = Playfair_Display({ variable: "--font-playfair", subsets: ["latin"], preload: false });
+const dmsans = DM_Sans({ variable: "--font-dmsans", subsets: ["latin"], preload: false });
+const code = JetBrains_Mono({ variable: "--font-code", subsets: ["latin"], preload: false });
 
-export const metadata: Metadata = {
-  title: {
-    default: "SALMA Fragrance · Maison de parfum à Dakar",
-    template: "%s · SALMA Fragrance",
-  },
-  description:
-    "Parfums, huiles parfumées, cosmétiques et senteurs d'intérieur. Livraison 24 h à Dakar, paiement Wave, Orange Money, Free Money ou carte.",
-  appleWebApp: { capable: true, title: "SALMA", statusBarStyle: "default" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { reglages } = await lireBase();
+  return {
+    title: { default: reglages.seo.titre, template: `%s · ${reglages.identite.nom}` },
+    description: reglages.seo.description,
+    appleWebApp: { capable: true, title: reglages.identite.logo, statusBarStyle: "default" },
+  };
+}
 
-export const viewport: Viewport = {
-  themeColor: "#f1efea",
-  viewportFit: "cover",
-};
+export async function generateViewport(): Promise<Viewport> {
+  const { reglages } = await lireBase();
+  return { themeColor: reglages.identite.couleurs.fond, viewportFit: "cover" };
+}
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+// Les couleurs et la police choisies dans l'admin remplacent celles du design system
+function styleTheme({ couleurs: c, police }: Reglages["identite"]) {
+  return `:root{--color-bissap:${c.primaire};--color-bissap-dark:${c.primaireFonce};--color-nuit:${c.secondaire};--color-rose:${c.accent};--color-creme:${c.fond};--color-creme-light:${c.fondClair};--color-ink:${c.texte};--color-muted:${c.texteDoux};--color-line:${c.ligne};--font-sans:var(--font-${police}),ui-sans-serif,system-ui,sans-serif;--font-grotesk:var(--font-${police})}`;
+}
+
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const { reglages } = await lireBase();
   return (
-    <html lang="fr" className={`${grotesk.variable} ${code.variable} antialiased`}>
-      <body className="flex min-h-screen flex-col pb-[calc(84px+env(safe-area-inset-bottom))] md:pb-0">
-        <MotionProviders>
-          <CartProvider>
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <BottomNav />
-            <CartDrawer />
-            <Cursor />
-          </CartProvider>
-        </MotionProviders>
+    <html lang="fr" className={`${schibsted.variable} ${bricolage.variable} ${playfair.variable} ${dmsans.variable} ${code.variable} antialiased`}>
+      <head>
+        <style dangerouslySetInnerHTML={{ __html: styleTheme(reglages.identite) }} />
+      </head>
+      <body className="flex min-h-screen flex-col">
+        <MotionProviders>{children}</MotionProviders>
       </body>
     </html>
   );
