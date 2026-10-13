@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+/* Design system SALMA : couleurs reprises de la proposition LAS COM */
+@theme {
+  --color-bissap: #a8153a;
+  --color-bissap-dark: #87102e;
+  --color-nuit: #1f2a5c;
+  --color-rose: #f2d0d7;
+  --color-rose-soft: #f7e3e7;
+  --color-creme: #f1efea;
+  --color-creme-light: #f8f7f3;
+  --color-terracotta: #c9693a;
+  --color-sauge: #6e7f5b;
+  --color-ink: #1a1a1a;
+  --color-muted: #6b6762;
+  --color-line: #dcd8d1;
+
+  --font-sans: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-code), ui-monospace, monospace;
+
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-drift: drift 9s ease-in-out infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-1deg);
+    }
+    50% {
+      transform: translateY(-14px) rotate(1deg);
+    }
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate(0, 0);
+      opacity: 0.55;
+    }
+    50% {
+      transform: translate(12px, -30px);
+      opacity: 0.9;
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-creme);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-bissap);
+  color: #fff;
+}
+
+/* Révélations au défilement (voir components/reveal.tsx) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Respect du réglage « réduire les animations » (exigence WCAG du cahier des charges) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
