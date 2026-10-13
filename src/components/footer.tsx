@@ -26,7 +26,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-white/40">Boutique</p>
+            <p className="text-lg font-bold">Boutique</p>
             <ul className="mt-4 space-y-2 text-sm">
               {univers.map((u) => (
                 <li key={u.slug}>
@@ -44,7 +44,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-white/40">Expériences</p>
+            <p className="text-lg font-bold">Expériences</p>
             <ul className="mt-4 space-y-2 text-sm text-white/80">
               <li>
                 <Link href="/quiz" className="hover:text-white">
@@ -58,7 +58,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-white/40">Service</p>
+            <p className="text-lg font-bold">Service</p>
             <ul className="mt-4 space-y-2 text-sm text-white/80">
               <li>Livraison & retours</li>
               <li>FAQ</li>
@@ -78,7 +78,7 @@ export function Footer() {
         <div className="mt-10 flex flex-col gap-6 border-t border-white/10 pt-8 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap gap-2">
             {paiements.map((p) => (
-              <span key={p} className="border border-white/20 px-3 py-1 font-mono text-[11px] text-white/70">
+              <span key={p} className="border border-white/20 px-3 py-1 text-sm text-white/70">
                 {p}
               </span>
             ))}

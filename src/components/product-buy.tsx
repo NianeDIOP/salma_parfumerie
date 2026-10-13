@@ -34,7 +34,7 @@ export function ProductBuy({ produit: p }: { produit: Produit }) {
                 }`}
               >
                 <span className="block text-sm font-semibold">{x.label}</span>
-                <span className="block font-mono text-[11px] text-muted">{formatFCFA(x.prix)}</span>
+                <span className="block text-sm text-muted">{formatFCFA(x.prix)}</span>
               </button>
             ))}
           </div>

@@ -114,7 +114,7 @@ export function Checkout() {
                         </button>
                       </div>
                     </div>
-                    <p className="font-mono">{formatFCFA(prixLigne(l))}</p>
+                    <p className="tabular-nums">{formatFCFA(prixLigne(l))}</p>
                   </li>
                 );
               })}
@@ -152,7 +152,7 @@ export function Checkout() {
                     <span className="block text-sm font-semibold">{x.label}</span>
                     <span className="text-xs text-muted">{x.delai}</span>
                   </span>
-                  <span className="font-mono text-sm">
+                  <span className="text-base font-semibold tabular-nums">
                     {x.id === "dakar" && total >= LIVRAISON_OFFERTE_DES ? "Offerte" : x.frais ? `${formatFCFA(x.frais)} F` : "Gratuit"}
                   </span>
                 </label>
@@ -225,16 +225,16 @@ export function Checkout() {
         <dl className="mt-4 space-y-2 text-sm">
           <div className="flex justify-between">
             <dt>Sous-total</dt>
-            <dd className="font-mono">{formatFCFA(total)}</dd>
+            <dd className="tabular-nums">{formatFCFA(total)}</dd>
           </div>
           <div className="flex justify-between">
             <dt>Livraison</dt>
-            <dd className="font-mono">{frais ? formatFCFA(frais) : "Offerte"}</dd>
+            <dd className="tabular-nums">{frais ? formatFCFA(frais) : "Offerte"}</dd>
           </div>
           {remise > 0 && (
             <div className="flex justify-between text-bissap">
               <dt>Code {codeApplique}</dt>
-              <dd className="font-mono">− {formatFCFA(remise)}</dd>
+              <dd className="tabular-nums">− {formatFCFA(remise)}</dd>
             </div>
           )}
           <div className="flex justify-between border-t border-line pt-3 text-lg font-bold">
@@ -253,7 +253,7 @@ export function Checkout() {
           <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="Code promo" className="w-full bg-transparent px-3 py-2.5 text-sm outline-none" />
           <button className="px-4 text-sm font-semibold">OK</button>
         </form>
-        <p className="mt-2 text-[11px] text-muted">Essayez CERCLE10 (démonstration).</p>
+        <p className="mt-2 text-sm text-muted">Essayez CERCLE10 (démonstration).</p>
       </aside>
     </section>
   );

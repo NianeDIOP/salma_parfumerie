@@ -51,7 +51,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
 
         {!q && (
           <div className="mt-8">
-            <p className="font-mono text-xs uppercase tracking-widest text-muted">Notes populaires</p>
+            <p className="text-lg font-semibold">Recherches populaires</p>
             <div className="mt-4 flex flex-wrap gap-2">
               {suggestions.map((s) => (
                 <button key={s} onClick={() => setQ(s)} className="border border-line px-4 py-2 text-sm transition hover:border-ink">
@@ -64,7 +64,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
 
         {q && (
           <div className="mt-6 max-h-[70vh] overflow-y-auto">
-            <p className="mb-4 font-mono text-xs text-muted">
+            <p className="mb-4 text-sm text-muted">
               {resultats.length} résultat{resultats.length > 1 ? "s" : ""}
             </p>
             {resultats.length === 0 && (
@@ -88,7 +88,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                       <p className="font-bold">
                         {p.marque} {p.nom}
                       </p>
-                      <p className="font-mono text-xs">dès {formatFCFA(prixMin(p))} FCFA</p>
+                      <p className="text-sm">dès {formatFCFA(prixMin(p))} FCFA</p>
                     </div>
                   </Link>
                 </li>

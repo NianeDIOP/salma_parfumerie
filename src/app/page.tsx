@@ -1,33 +1,29 @@
 import Link from "next/link";
 import { Hero } from "@/components/home/hero";
-import { ScentJourney } from "@/components/home/scent-journey";
-import { UniversScroll } from "@/components/home/univers-scroll";
+import { ScentFamilies } from "@/components/home/scent-families";
+import { UniversGrid } from "@/components/home/univers-grid";
 import { ArrowIcon, SparkIcon } from "@/components/icons";
 import { Magnetic } from "@/components/motion/magnetic";
 import { Parallax, RevealImage } from "@/components/motion/parallax";
 import { SplitText } from "@/components/motion/split-text";
-import { VelocityMarquee } from "@/components/motion/velocity-marquee";
 import { Photo } from "@/components/photo";
 import { ProductCard } from "@/components/product-card";
 import { ambiances, bestSellers, getProduit, produits, produitsDeUnivers, univers } from "@/lib/catalogue";
 
 const vedettes = ["coco-noir", "bleu-de-chanel", "coco-mademoiselle", "versace-eros"].map((s) => getProduit(s)!);
 
-const etapes = [
+const familles = [
   {
-    famille: "Frais & aquatique",
     titre: "La légèreté d'un matin à Gorée.",
     texte: "Agrumes, notes marines et bois clairs : des parfums lumineux pour le quotidien et la saison chaude.",
     produit: getProduit("acqua-di-gio")!,
   },
   {
-    famille: "Floral & poudré",
     titre: "Un bouquet qui vous ressemble.",
     texte: "Rose, jasmin et fleur d'oranger : des sillages féminins, élégants, pleins de lumière.",
     produit: getProduit("coco-mademoiselle")!,
   },
   {
-    famille: "Oriental & boisé",
     titre: "La magie des nuits de Dakar.",
     texte: "Oud, vanille, encens et ambre : des parfums intenses pour les soirées et les grandes cérémonies.",
     produit: getProduit("coco-noir")!,
@@ -51,8 +47,14 @@ export default function Home() {
     <>
       <Hero slides={vedettes} />
 
-      <section className="border-y border-line py-6 md:py-10">
-        <VelocityMarquee items={marques} className="text-5xl font-extrabold tracking-tighter md:text-8xl" />
+      <section className="overflow-hidden border-b border-line py-8 md:py-10" aria-label="Nos marques">
+        <div className="flex w-max animate-marquee gap-16 whitespace-nowrap text-4xl font-extrabold tracking-tighter md:text-6xl">
+          {[...marques, ...marques].map((m, i) => (
+            <span key={i} className={i % 2 ? "text-bissap" : ""}>
+              {m}
+            </span>
+          ))}
+        </div>
       </section>
 
       {/* Manifeste */}
@@ -61,7 +63,7 @@ export default function Home() {
           <SplitText text="Une maison de parfum, pas un simple catalogue." inView stagger={0.05} />
         </h2>
         <div className="flex flex-col justify-end gap-6">
-          <p className="text-lg text-muted">
+          <p className="text-xl leading-snug text-muted">
             Les plus grandes maisons de parfum et nos créations SALMA, réunies à Dakar. Chaque flacon est authentique, choisi
             avec soin, et livré avec un échantillon pour vous faire découvrir une nouvelle signature.
           </p>
@@ -74,7 +76,7 @@ export default function Home() {
         </div>
       </section>
 
-      <UniversScroll univers={univers} compte={compte} />
+      <UniversGrid univers={univers} compte={compte} />
 
       {/* Best-sellers */}
       <section className="mx-auto max-w-7xl px-4 py-24 md:px-8 md:py-32">
@@ -93,7 +95,7 @@ export default function Home() {
         </div>
       </section>
 
-      <ScentJourney etapes={etapes} />
+      <ScentFamilies familles={familles} />
 
       {/* Éditorial + quiz */}
       <section className="relative">
@@ -103,11 +105,10 @@ export default function Home() {
         </Parallax>
         <div className="absolute inset-0 flex items-end">
           <div className="mx-auto w-full max-w-7xl px-4 pb-16 text-white md:px-8 md:pb-24">
-            <p className="font-mono text-xs uppercase tracking-[0.25em] text-white/70">6 questions · 60 secondes</p>
-            <h2 className="mt-4 max-w-3xl text-5xl font-extrabold leading-[0.92] tracking-tighter md:text-8xl">
+            <h2 className=" max-w-3xl text-5xl font-extrabold leading-[0.92] tracking-tighter md:text-8xl">
               <SplitText text="Quelle est votre signature ?" inView />
             </h2>
-            <p className="mt-6 max-w-md text-white/80">Répondez au quiz « Ma Signature » et recevez trois fragrances choisies pour vous.</p>
+            <p className="mt-6 max-w-md text-xl text-white/85">Six questions, soixante secondes, et trois fragrances choisies pour vous.</p>
             <Magnetic className="mt-10">
               <Link href="/quiz" className="inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 font-semibold text-nuit transition hover:bg-rose">
                 <SparkIcon /> Commencer le quiz
@@ -120,11 +121,10 @@ export default function Home() {
       {/* Maison SALMA */}
       <section className="mx-auto grid max-w-7xl gap-12 px-4 py-24 md:px-8 md:py-32 lg:grid-cols-[0.8fr_1.2fr]">
         <div className="lg:sticky lg:top-28 lg:self-start">
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-bissap">Créations Maison SALMA</p>
-          <h2 className="mt-4 text-5xl font-extrabold leading-[0.92] tracking-tighter md:text-6xl">
+          <h2 className=" text-5xl font-extrabold leading-[0.92] tracking-tighter md:text-6xl">
             <SplitText text="Les senteurs de chez nous." inView />
           </h2>
-          <p className="mt-6 max-w-sm text-muted">
+          <p className="mt-6 max-w-sm text-xl text-muted">
             Thiouraye, musc, huiles précieuses et bougies : nos créations, inspirées des maisons sénégalaises.
           </p>
           <RevealImage className="mt-10 hidden aspect-[4/3] lg:block" color="var(--color-nuit)">
@@ -144,7 +144,7 @@ export default function Home() {
           {reassurance.map((r) => (
             <div key={r.titre} className="border-b border-line py-10 pr-6 lg:border-b-0">
               <p className="text-5xl font-extrabold tracking-tighter text-bissap">{r.titre}</p>
-              <p className="mt-3 text-sm text-muted">{r.texte}</p>
+              <p className="mt-3 text-base text-muted">{r.texte}</p>
             </div>
           ))}
         </div>

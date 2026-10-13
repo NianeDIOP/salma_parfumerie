@@ -66,7 +66,7 @@ export function Catalogue({ produits }: { produits: Produit[] }) {
                 <input type="checkbox" checked={fam.includes(f)} onChange={() => setFam(toggle(fam, f))} className="size-3.5 accent-ink" />
                 {f}
               </span>
-              <span className="font-mono text-[10px] text-muted">{produits.filter((p) => p.famille === f).length}</span>
+              <span className="text-xs text-muted">{produits.filter((p) => p.famille === f).length}</span>
             </label>
           ))}
         </fieldset>
@@ -94,7 +94,7 @@ export function Catalogue({ produits }: { produits: Produit[] }) {
             />
           ))}
         </div>
-        <div className="mt-1 flex justify-between text-[10px] text-muted">
+        <div className="mt-1 flex justify-between text-xs text-muted">
           <span>Légère</span>
           <span>Intense</span>
         </div>
@@ -111,7 +111,7 @@ export function Catalogue({ produits }: { produits: Produit[] }) {
           onChange={(e) => setBudget(Number(e.target.value))}
           className="w-full accent-bissap"
         />
-        <p className="font-mono text-xs">{budget.toLocaleString("fr-FR")} FCFA</p>
+        <p className="text-sm">{budget.toLocaleString("fr-FR")} FCFA</p>
       </fieldset>
 
       <fieldset>
@@ -160,7 +160,7 @@ export function Catalogue({ produits }: { produits: Produit[] }) {
           </label>
         </div>
 
-        <p className="mb-4 font-mono text-xs text-muted">
+        <p className="mb-4 text-sm text-muted">
           {resultats.length} produit{resultats.length > 1 ? "s" : ""}
         </p>
 

@@ -18,9 +18,8 @@ export function ComingSoon({ titre, texte }: { titre: string; texte: string }) {
           </div>
         ))}
       </div>
-      <p className="mt-10 font-mono text-xs text-bissap">Bientôt disponible</p>
-      <h1 className="mt-3 text-4xl font-extrabold tracking-tight md:text-5xl">{titre}</h1>
-      <p className="mt-4 text-muted">{texte}</p>
+      <h1 className="mt-10 text-4xl font-extrabold tracking-tight md:text-5xl">{titre}</h1>
+      <p className="mt-4 text-lg text-muted">{texte}</p>
       <Link href="/parfums" className="mt-8 rounded-full bg-ink px-7 py-3.5 text-sm font-semibold text-white">
         Découvrir les parfums
       </Link>

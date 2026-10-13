@@ -138,7 +138,7 @@ export function Quiz() {
               style={{ left: p.left, animation: `petale ${p.duree} ${p.delay} ease-in forwards`, rotate: `${p.rot}deg` }}
             />
           ))}
-          <p className="font-mono text-xs text-white/70">Votre profil olfactif</p>
+          <p className="text-xl text-white/80">Votre profil olfactif</p>
           <h1 className="mt-3 animate-fade-up text-5xl font-extrabold tracking-tight md:text-6xl">{profil}</h1>
           <p className="mx-auto mt-4 max-w-md text-white/80">Voici les trois fragrances que nous avons choisies pour vous.</p>
         </div>
@@ -197,7 +197,7 @@ export function Quiz() {
           <CloseIcon className="size-5" />
         </Link>
         <p className="font-bold">Ma Signature</p>
-        <p className="font-mono text-sm">
+        <p className="text-base font-semibold tabular-nums">
           {etape + 1} / {questions.length}
         </p>
       </div>
@@ -206,8 +206,7 @@ export function Quiz() {
       </div>
 
       <div key={etape} className="animate-fade-up">
-        <p className="mt-10 font-mono text-xs text-bissap">Question {etape + 1}</p>
-        <h1 className="mt-2 text-4xl font-extrabold tracking-tight md:text-5xl">{q.titre}</h1>
+        <h1 className="mt-10 text-4xl font-extrabold tracking-tight md:text-5xl">{q.titre}</h1>
         <p className="mt-2 text-sm text-muted">{q.aide}</p>
 
         <div className="mt-8 grid grid-cols-2 gap-3">
@@ -228,7 +227,7 @@ export function Quiz() {
                   </span>
                 )}
                 <p className="mt-2 px-1 text-sm font-bold">{o.label}</p>
-                {o.detail && <p className="px-1 pb-1 text-[11px] text-muted">{o.detail}</p>}
+                {o.detail && <p className="px-1 pb-1 text-sm text-muted">{o.detail}</p>}
               </button>
             );
           })}

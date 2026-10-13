@@ -93,7 +93,7 @@ export function CartDrawer() {
                           {p.type} · {l.contenance}
                         </p>
                       </div>
-                      <p className="font-mono text-sm">{formatFCFA(prixLigne(l))}</p>
+                      <p className="text-base font-semibold tabular-nums">{formatFCFA(prixLigne(l))}</p>
                     </div>
                     <div className="mt-auto flex items-center justify-between">
                       <div className="flex items-center border border-line">

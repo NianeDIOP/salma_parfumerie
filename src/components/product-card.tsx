@@ -15,14 +15,14 @@ export function ProductCard({ produit: p, index = 0 }: { produit: Produit; index
   return (
     <motion.article
       className="group flex flex-col"
-      initial={{ opacity: 0, y: 60 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-8%" }}
-      transition={{ duration: 0.9, delay: (index % 4) * 0.08, ease: [0.2, 0.7, 0.1, 1] }}
+      transition={{ duration: 0.6, delay: (index % 4) * 0.06, ease: [0.25, 0.8, 0.25, 1] }}
     >
       <div className="relative aspect-[4/5] overflow-hidden rounded-[2px]" style={{ background: p.theme.bg }} data-cursor="voir">
         <Link href={`/${p.univers}/${p.slug}`} className="absolute inset-0" aria-label={`${p.marque} ${p.nom}`}>
-          <div className="absolute inset-0 transition-transform duration-[1.4s] ease-[cubic-bezier(.2,.7,.1,1)] group-hover:scale-110">
+          <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
             <Photo id={p.images[0]} alt={`${p.marque} ${p.nom}`} sizes="(max-width: 768px) 50vw, 25vw" />
           </div>
           {p.images[1] && (
@@ -38,14 +38,14 @@ export function ProductCard({ produit: p, index = 0 }: { produit: Produit; index
 
         {p.badge && (
           <span
-            className="absolute left-3 top-3 z-10 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider backdrop-blur-md"
-            style={{ background: p.theme.bg + "cc", color: encre }}
+            className="absolute left-3 top-3 z-10 rounded-full px-3 py-1 text-xs font-semibold"
+            style={{ background: p.theme.bg, color: encre }}
           >
             {p.badge}
           </span>
         )}
         <button
-          className="absolute right-3 top-3 z-10 grid size-9 place-items-center rounded-full bg-white/80 text-ink opacity-0 backdrop-blur transition duration-500 hover:scale-110 group-hover:opacity-100"
+          className="absolute right-3 top-3 z-10 grid size-9 place-items-center rounded-full bg-white text-ink opacity-0 transition duration-500 hover:scale-110 group-hover:opacity-100"
           aria-label="Ajouter aux favoris"
         >
           <HeartIcon className="size-4" />
@@ -63,19 +63,19 @@ export function ProductCard({ produit: p, index = 0 }: { produit: Produit; index
 
       <div className="mt-4 flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">{p.marque}</p>
+          <p className="text-sm font-semibold text-bissap">{p.marque}</p>
           <Link href={`/${p.univers}/${p.slug}`} className="mt-1 block text-lg font-bold leading-tight tracking-tight hover:text-bissap">
             {p.nom}
           </Link>
-          <p className="text-xs text-muted">
+          <p className="text-sm text-muted">
             {p.type} · {p.famille}
           </p>
         </div>
         <div className="shrink-0 text-right">
-          <p className="font-mono text-sm">
-            {formatFCFA(prixMin(p))} <span className="text-[10px] text-muted">F</span>
+          <p className="text-base font-semibold tabular-nums">
+            {formatFCFA(prixMin(p))} F
           </p>
-          <p className="mt-1 flex items-center justify-end gap-0.5 text-[11px]">
+          <p className="mt-1 flex items-center justify-end gap-0.5 text-sm">
             <StarIcon className="size-3 text-bissap" /> {p.note}
           </p>
         </div>

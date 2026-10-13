@@ -23,13 +23,13 @@ export default async function UniversPage({ params }: PageProps<"/[univers]">) {
 
   return (
     <>
-      <section className="grain relative isolate flex min-h-[62vh] items-end overflow-hidden text-white" style={{ background: u.theme.bg }}>
+      <section className="relative isolate flex min-h-[62vh] items-end overflow-hidden text-white" style={{ background: u.theme.bg }}>
         <Parallax className="absolute inset-0" offset={90}>
           <Photo id={u.image} alt={u.nom} sizes="100vw" priority />
         </Parallax>
         <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${u.theme.bg} 8%, ${u.theme.bg}aa 45%, transparent)` }} />
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-12 md:px-8">
-          <p className="text-xs text-white/70">
+          <p className="text-sm text-white/75">
             <Link href="/" className="hover:text-white">
               Accueil
             </Link>{" "}
@@ -38,7 +38,7 @@ export default async function UniversPage({ params }: PageProps<"/[univers]">) {
           <h1 className="mt-4 text-6xl font-extrabold leading-[0.88] tracking-tighter md:text-[9rem]">
             <SplitText text={u.nom} />
           </h1>
-          <p className="mt-5 max-w-lg text-white/85">
+          <p className="mt-5 max-w-lg text-xl leading-snug text-white/90">
             {u.description} {produits.length} référence{produits.length > 1 ? "s" : ""}.
           </p>
         </div>

@@ -83,7 +83,7 @@ export default async function ProduitPage({ params }: PageProps<"/[univers]/[slu
                     ))}
                   </p>
                   <p className="mt-2 text-sm">« {a.texte} »</p>
-                  <p className="mt-1 text-[11px] text-muted">{a.auteur} · Achat vérifié</p>
+                  <p className="mt-1 text-sm text-muted">{a.auteur} · Achat vérifié</p>
                 </li>
               ))}
             </ul>

@@ -1,15 +1,9 @@
 "use client";
 
-import { ReactLenis } from "lenis/react";
 import { MotionConfig } from "motion/react";
 
-// Défilement fluide (Lenis) + respect du réglage « réduire les animations ».
+// Défilement natif du navigateur (rapide et fluide) ; les animations respectent
+// le réglage « réduire les animations » du téléphone ou de l'ordinateur.
 export function MotionProviders({ children }: { children: React.ReactNode }) {
-  return (
-    <MotionConfig reducedMotion="user">
-      <ReactLenis root options={{ lerp: 0.09, smoothWheel: true }}>
-        {children}
-      </ReactLenis>
-    </MotionConfig>
-  );
+  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
 }

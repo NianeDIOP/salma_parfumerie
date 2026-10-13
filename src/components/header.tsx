@@ -25,7 +25,7 @@ const messages = [
 export function AnnouncementBar() {
   const items = [...messages, ...messages];
   return (
-    <div className="overflow-hidden bg-nuit py-2 text-[11px] tracking-wide text-white/90">
+    <div className="overflow-hidden bg-nuit py-2.5 text-sm text-white/90">
       <div className="flex w-max animate-marquee gap-12 whitespace-nowrap">
         {items.map((m, i) => (
           <span key={i} className="flex items-center gap-12">
@@ -87,7 +87,7 @@ export function Header() {
 
           <Link href="/" className="flex items-baseline gap-1.5" aria-label="SALMA Fragrance, accueil">
             <span className="text-2xl font-extrabold tracking-tight">salma</span>
-            <span className="font-mono text-[10px] text-muted">fragrance</span>
+            <span className="text-sm text-muted">fragrance</span>
           </Link>
 
           <nav className="ml-6 hidden items-center gap-7 text-sm lg:flex">

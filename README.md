@@ -50,7 +50,7 @@ Options : `SYNC_INTERVAL=10 npm run dev:sync` (vérifie toutes les 10 s), `PORT=
 
 - **Next.js 16** (App Router, rendu serveur et statique), **React 19**, **TypeScript**
 - **Tailwind CSS 4**, design system SALMA dans `src/app/globals.css` (rouge bissap, bleu nuit, rose poudré, crème)
-- **Motion** (animations, transitions de pages, scroll) et **Lenis** (défilement fluide)
+- **Motion** (animations et transitions de pages), défilement natif du navigateur
 - Catalogue de démonstration dans `src/lib/catalogue.ts` : chaque produit a ses photos et sa couleur de thème (`theme`), qui pilote les fonds et transitions
 - Photos : [Unsplash](https://unsplash.com/license) (licence libre, usage commercial autorisé), chargées depuis leur CDN. Les prix, stocks et la sélection de marques sont indicatifs : à remplacer par le catalogue réel de SALMA et ses packshots officiels
 
@@ -69,7 +69,7 @@ src/
 ## Feuille de route (formule Prestige)
 
 - [x] Fondations : design system, accueil, catalogue, fiche produit, recherche, panier, quiz, tunnel de commande (paiement simulé)
-- [x] Motion design : hero cinématique, fonds adaptés à chaque parfum, défilement fluide, univers en scroll horizontal, voyage olfactif, transitions de pages, curseur signature
+- [x] Motion design : hero aux couleurs de chaque parfum, révélations d'images, familles olfactives, transitions de pages, curseur signature (défilement natif, sans blocage)
 - [ ] Flacons 3D (Three.js / React Three Fiber)
 - [ ] Back-office : tableau de bord, commandes, paiements, stocks, clients, livraisons (maquette 5)
 - [ ] Base de données PostgreSQL + API e-commerce

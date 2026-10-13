@@ -39,12 +39,12 @@ export function Cursor() {
 
   return (
     <motion.div
-      className="pointer-events-none fixed left-0 top-0 z-[100] hidden mix-blend-difference md:block"
+      className="pointer-events-none fixed left-0 top-0 z-[100] hidden md:block"
       style={{ x: sx, y: sy }}
       aria-hidden
     >
       <motion.div
-        className="grid -translate-x-1/2 -translate-y-1/2 place-items-center bg-white"
+        className="grid -translate-x-1/2 -translate-y-1/2 place-items-center bg-bissap/90"
         animate={{ width: size, height: size, borderRadius: mode === "default" ? "50% 50% 50% 0" : "50%", rotate: mode === "default" ? -45 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 24 }}
       >
@@ -54,7 +54,7 @@ export function Cursor() {
               initial={{ opacity: 0, scale: 0.6 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              className="font-mono text-[11px] uppercase tracking-widest text-black"
+              className="text-sm font-semibold text-white"
             >
               Voir
             </motion.span>

@@ -19,7 +19,7 @@ export function ProductHero({ produit: p, univers: u }: { produit: Produit; univ
   const encre = p.theme.dark ? "#fff" : "#1a1a1a";
 
   return (
-    <section ref={ref} className="grain relative isolate overflow-hidden" style={{ background: p.theme.bg, color: encre }}>
+    <section ref={ref} className="relative isolate overflow-hidden" style={{ background: p.theme.bg, color: encre }}>
       <motion.p
         className="pointer-events-none absolute -bottom-[0.15em] left-0 z-0 select-none whitespace-nowrap text-[24vw] font-extrabold leading-none tracking-tighter"
         style={{ x: xTexte, WebkitTextStroke: `1px ${encre}`, color: "transparent", opacity: 0.18 }}
@@ -72,7 +72,7 @@ export function ProductHero({ produit: p, univers: u }: { produit: Produit; univ
         {/* Informations */}
         <div className="lg:sticky lg:top-24 lg:self-start">
           <motion.p
-            className="flex items-center gap-2 text-xs opacity-75"
+            className="flex items-center gap-2 text-sm opacity-75"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.75 }}
             transition={{ delay: 0.3 }}
@@ -82,17 +82,19 @@ export function ProductHero({ produit: p, univers: u }: { produit: Produit; univ
             </Link>
             <span>›</span> {p.famille}
             {p.badge && (
-              <span className="ml-2 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider" style={{ background: encre, color: p.theme.bg }}>
+              <span className="ml-2 rounded-full px-3 py-0.5 text-xs font-semibold" style={{ background: encre, color: p.theme.bg }}>
                 {p.badge}
               </span>
             )}
           </motion.p>
-          <p className="mt-6 font-mono text-xs uppercase tracking-[0.3em] opacity-80">{p.marque}</p>
+          <p className="mt-6 text-2xl font-semibold" style={{ color: p.theme.accent }}>
+            {p.marque}
+          </p>
           <h1 className="mt-2 text-5xl font-extrabold leading-[0.9] tracking-tighter md:text-7xl">
             <SplitText text={p.nom} delay={0.3} />
           </h1>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }}>
-            <p className="mt-3 opacity-80">
+            <p className="mt-3 text-lg opacity-80">
               {p.type} · {p.genre}
             </p>
             <p className="mt-3 flex items-center gap-1 text-sm">
