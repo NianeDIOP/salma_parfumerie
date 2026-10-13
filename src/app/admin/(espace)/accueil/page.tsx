@@ -1,4 +1,6 @@
 import { EnTetePage } from "@/components/admin/ui";
+import { Icone } from "@/components/admin/icones";
+import { classeBouton } from "@/components/admin/styles";
 import { lireBase } from "@/lib/db";
 import { EditeurAccueil } from "./editeur";
 
@@ -7,11 +9,13 @@ export default async function Accueil() {
   return (
     <>
       <EnTetePage
+        icone="accueil"
+        ton="rouge"
         titre="Page d'accueil"
-        description="Composez l'accueil section par section : ajoutez, réordonnez, masquez et modifiez chaque bloc (titres, textes, images, produits)."
+        description="Ajoutez, réordonnez, masquez et modifiez chaque section"
         actions={
-          <a href="/" target="_blank" className="rounded-full border border-line bg-white px-5 py-2.5 text-sm font-semibold hover:border-ink">
-            Voir l&apos;accueil ↗
+          <a href="/" target="_blank" className={classeBouton("secondaire")}>
+            <Icone nom="externe" /> Voir l&apos;accueil
           </a>
         }
       />

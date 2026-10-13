@@ -6,7 +6,7 @@ export default async function Pages() {
   const { reglages } = await lireBase();
   return (
     <>
-      <EnTetePage titre="Pages" description="Pages de contenu : livraison, FAQ, contact, CGV… Elles sont accessibles à l'adresse /pages/nom-de-la-page." />
+      <EnTetePage icone="pages" ton="gris" titre="Pages" description="Livraison, FAQ, contact, CGV… accessibles à l'adresse /pages/…" />
       <EditeurPages pages={reglages.pages} />
     </>
   );

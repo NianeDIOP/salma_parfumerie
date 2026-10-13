@@ -1,5 +1,7 @@
 "use client";
 
+import { Icone } from "@/components/admin/icones";
+import { classeBouton } from "@/components/admin/styles";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -81,20 +83,23 @@ export function EditeurProduit({ produit, univers, marques }: { produit: Produit
 
   return (
     <>
-      <Link href="/admin/produits" className="text-sm font-semibold text-muted hover:text-ink">
-        ← Produits
+      <Link href="/admin/produits" className="inline-flex items-center gap-1 text-xs font-medium text-muted hover:text-ink">
+        <Icone nom="retour" className="size-3.5" /> Produits
       </Link>
-      <div className="mt-3">
+      <div className="mt-2">
         <EnTetePage
+          icone="produits"
+          ton="violet"
           titre={produit ? `${p.marque} ${p.nom}`.trim() || "Produit" : "Nouveau produit"}
+          description={produit ? (p.publie === false ? "Brouillon" : "En ligne") : "Remplissez les informations puis enregistrez"}
           actions={
             <>
               {produit && (
-                <a href={`/${produit.univers}/${produit.slug}`} target="_blank" className="rounded-full border border-line bg-white px-5 py-2.5 text-sm font-semibold hover:border-ink">
-                  Voir sur le site ↗
+                <a href={`/${produit.univers}/${produit.slug}`} target="_blank" className={classeBouton("secondaire")}>
+                  <Icone nom="externe" /> Voir
                 </a>
               )}
-              <Bouton onClick={enregistrer} disabled={enCours}>
+              <Bouton icone="check" onClick={enregistrer} disabled={enCours}>
                 {enCours ? "Enregistrement…" : "Enregistrer"}
               </Bouton>
             </>
@@ -102,9 +107,9 @@ export function EditeurProduit({ produit, univers, marques }: { produit: Produit
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-        <div className="space-y-4">
-          <Carte titre="Informations">
+      <div className="grid gap-3 lg:grid-cols-[1.6fr_1fr]">
+        <div className="space-y-3">
+          <Carte titre="Informations" icone="info">
             <div className="grid gap-3 sm:grid-cols-2">
               <Champ label="Nom du produit">
                 <Saisie value={p.nom} onChange={(e) => set({ nom: e.target.value })} placeholder="Coco Noir" />
@@ -140,7 +145,7 @@ export function EditeurProduit({ produit, univers, marques }: { produit: Produit
             </div>
           </Carte>
 
-          <Carte titre="Photos" description="La première photo est la principale. Identifiant Unsplash, lien web ou image envoyée depuis votre ordinateur.">
+          <Carte titre="Photos" icone="image" description="La première est la principale · Unsplash, lien web ou envoi depuis l'ordinateur">
             <ListeOrdonnee
               items={p.images}
               onChange={(images) => set({ images })}
@@ -151,7 +156,7 @@ export function EditeurProduit({ produit, univers, marques }: { produit: Produit
             />
           </Carte>
 
-          <Carte titre="Prix et stock" description="Une ligne par contenance (30 ml, 50 ml, 100 ml…).">
+          <Carte titre="Prix et stock" icone="argent" description="Une ligne par contenance (30 ml, 50 ml, 100 ml…)">
             <ListeOrdonnee
               items={p.contenances}
               onChange={(contenances) => set({ contenances })}
@@ -171,12 +176,12 @@ export function EditeurProduit({ produit, univers, marques }: { produit: Produit
                 </div>
               )}
             />
-            <Champ label="Alerte de stock à partir de" className="mt-4 max-w-xs">
+            <Champ label="Alerte de stock à partir de" className="mt-3 max-w-[200px]">
               <SaisieNombre value={p.seuilAlerte ?? 5} min={0} onChange={(n) => set({ seuilAlerte: n })} />
             </Champ>
           </Carte>
 
-          <Carte titre="Profil olfactif">
+          <Carte titre="Profil olfactif" icone="fleur">
             <div className="grid gap-3 sm:grid-cols-3">
               <Champ label="Famille">
                 <Liste value={p.famille} onChange={(e) => set({ famille: e.target.value as Produit["famille"] })} options={familles.map((f) => ({ value: f, label: f }))} />
@@ -188,8 +193,8 @@ export function EditeurProduit({ produit, univers, marques }: { produit: Produit
                 <SaisieNombre value={p.intensite} min={1} max={4} onChange={(n) => set({ intensite: Math.min(4, Math.max(1, n)) as Produit["intensite"] })} />
               </Champ>
             </div>
-            <div className="mt-4">
-              <span className="mb-1.5 block text-sm font-semibold">Occasions</span>
+            <div className="mt-3">
+              <span className="mb-1 block text-xs font-medium text-ink/70">Occasions</span>
               <div className="flex flex-wrap gap-2">
                 {occasions.map((o) => {
                   const actif = p.occasions.includes(o);
@@ -198,7 +203,7 @@ export function EditeurProduit({ produit, univers, marques }: { produit: Produit
                       key={o}
                       type="button"
                       onClick={() => set({ occasions: actif ? p.occasions.filter((x) => x !== o) : [...p.occasions, o as Occasion] })}
-                      className={`rounded-full border px-4 py-2 text-sm font-medium ${actif ? "border-ink bg-ink text-white" : "border-line bg-white"}`}
+                      className={`h-7 rounded-md border px-2.5 text-xs font-medium ${actif ? "border-ink bg-ink text-white" : "border-line bg-white hover:border-ink/30"}`}
                     >
                       {o}
                     </button>
@@ -206,7 +211,7 @@ export function EditeurProduit({ produit, univers, marques }: { produit: Produit
                 })}
               </div>
             </div>
-            <div className="mt-4 grid gap-3">
+            <div className="mt-3 grid gap-3">
               {(["tete", "coeur", "fond"] as const).map((k) => (
                 <Champ key={k} label={`Notes de ${k === "tete" ? "tête" : k === "coeur" ? "cœur" : "fond"}`} aide="Séparées par des virgules">
                   <Saisie defaultValue={p.pyramide[k].join(", ")} onBlur={(e) => set({ pyramide: { ...p.pyramide, [k]: liste(e.target.value) } })} />
@@ -216,10 +221,10 @@ export function EditeurProduit({ produit, univers, marques }: { produit: Produit
                 <Saisie defaultValue={p.tags.join(", ")} onBlur={(e) => set({ tags: liste(e.target.value) })} />
               </Champ>
             </div>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <div className="mt-3 grid gap-2 sm:grid-cols-3">
               {(["tenue", "sillage", "saison"] as const).map((k) => (
-                <div key={k} className="rounded-xl border border-line p-3">
-                  <p className="text-sm font-semibold capitalize">{k}</p>
+                <div key={k} className="rounded-lg border border-line p-2.5">
+                  <p className="text-xs font-medium capitalize text-ink/70">{k}</p>
                   <input type="range" min={0} max={100} value={p[k].valeur} onChange={(e) => set({ [k]: { ...p[k], valeur: Number(e.target.value) } })} className="mt-2 w-full accent-bissap" />
                   <Saisie value={p[k].label} onChange={(e) => set({ [k]: { ...p[k], label: e.target.value } })} />
                 </div>
@@ -228,8 +233,8 @@ export function EditeurProduit({ produit, univers, marques }: { produit: Produit
           </Carte>
         </div>
 
-        <div className="space-y-4">
-          <Carte titre="Publication">
+        <div className="space-y-3">
+          <Carte titre="Publication" icone="oeil">
             <Interrupteur checked={p.publie !== false} onChange={(v) => set({ publie: v })} label="Visible sur le site" aide={p.publie === false ? "Brouillon : seul l'admin le voit" : "En ligne"} />
             <div className="mt-3 grid grid-cols-2 gap-3">
               <Champ label="Note moyenne">
@@ -241,31 +246,32 @@ export function EditeurProduit({ produit, univers, marques }: { produit: Produit
             </div>
           </Carte>
 
-          <Carte titre="Couleurs du produit" description="Elles colorent le fond du hero, de la fiche produit et des cartes.">
+          <Carte titre="Couleurs du produit" icone="couleur" description="Fond du hero, de la fiche produit et des cartes">
             <div className="grid gap-2">
               <Couleur label="Fond" value={p.theme.bg} onChange={(bg) => set({ theme: { ...p.theme, bg } })} />
               <Couleur label="Accent" value={p.theme.accent} onChange={(accent) => set({ theme: { ...p.theme, accent } })} />
               <Interrupteur checked={p.theme.dark} onChange={(dark) => set({ theme: { ...p.theme, dark } })} label="Fond sombre" aide="Texte en blanc" />
             </div>
             {/* Aperçu */}
-            <div className="mt-4 overflow-hidden rounded-2xl" style={{ background: p.theme.bg, color: encre }}>
-              <div className="relative mx-auto mt-5 aspect-[4/5] w-2/3 overflow-hidden rounded-t-full" style={{ background: p.theme.accent }}>
+            <div className="mt-3 overflow-hidden rounded-lg" style={{ background: p.theme.bg, color: encre }}>
+              <div className="relative mx-auto mt-4 aspect-[4/5] w-1/2 overflow-hidden rounded-t-full" style={{ background: p.theme.accent }}>
                 {p.images[0] && <Photo id={p.images[0]} alt="" sizes="200px" />}
               </div>
-              <div className="p-4">
-                <p className="text-sm font-semibold" style={{ color: p.theme.accent }}>
+              <div className="p-3">
+                <p className="text-xs font-semibold" style={{ color: p.theme.accent }}>
                   {p.marque || "Marque"}
                 </p>
-                <p className="text-2xl font-extrabold tracking-tight">{p.nom || "Nom du produit"}</p>
-                <p className="text-sm opacity-80">{p.accroche}</p>
+                <p className="text-lg font-extrabold tracking-tight">{p.nom || "Nom du produit"}</p>
+                <p className="text-xs opacity-80">{p.accroche}</p>
               </div>
             </div>
           </Carte>
 
           {produit && (
-            <Carte titre="Zone sensible">
+            <Carte titre="Zone sensible" icone="alerte">
               <Bouton
                 variante="danger"
+                icone="poubelle"
                 onClick={() => {
                   if (confirm("Supprimer définitivement ce produit ?")) lancer(() => supprimerProduit(produit.slug), (r) => r.ok && router.push("/admin/produits"));
                 }}

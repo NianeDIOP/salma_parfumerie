@@ -9,16 +9,16 @@ export function ActionsListe({ slug, publie, lien }: { slug: string; publie: boo
   const router = useRouter();
   const [ouvert, setOuvert] = useState(false);
   const { retour, lancer } = useAction();
-  const item = "block w-full px-4 py-2.5 text-left text-sm hover:bg-creme";
+  const item = "block w-full px-3 py-1.5 text-left text-[13px] hover:bg-creme";
   return (
     <div className="relative z-10 self-start">
-      <button onClick={() => setOuvert(!ouvert)} className="grid size-9 place-items-center rounded-full text-xl hover:bg-line" aria-label="Actions">
+      <button onClick={() => setOuvert(!ouvert)} className="grid size-7 place-items-center rounded-md text-lg leading-none text-muted hover:bg-ink/5 hover:text-ink" aria-label="Actions">
         ⋯
       </button>
       {ouvert && (
         <>
           <div className="fixed inset-0" onClick={() => setOuvert(false)} />
-          <div className="absolute right-0 top-10 w-48 overflow-hidden rounded-xl border border-line bg-white shadow-xl">
+          <div className="absolute right-0 top-8 w-44 overflow-hidden rounded-lg border border-line bg-white py-1 shadow-xl">
             <a href={lien} target="_blank" className={item}>
               Voir sur le site ↗
             </a>

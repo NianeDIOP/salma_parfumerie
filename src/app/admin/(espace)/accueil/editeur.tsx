@@ -1,11 +1,24 @@
 "use client";
 
+import { Icone, PastilleIcone, type NomIcone } from "@/components/admin/icones";
 import { useState } from "react";
 import { BarreEnregistrer, Bouton, Champ, ChampImage, ChampLien, ChoixProduits, Interrupteur, Liste, ListeOrdonnee, Notification, Saisie, SaisieNombre, useAction, useBrouillon, Zone } from "@/components/admin/ui";
 import { ICONES, IconeNommee } from "@/components/icon-set";
 import { enregistrerReglages } from "@/lib/actions/admin";
 import type { Produit, Univers } from "@/lib/catalogue";
 import { nouvelId, typesSections, type Section } from "@/lib/site";
+
+const ICONES_SECTIONS: Record<Section["type"], NomIcone> = {
+  hero: "image",
+  pastilles: "univers",
+  marques: "texte",
+  manifeste: "texte",
+  univers: "calques",
+  produits: "produits",
+  familles: "fleur",
+  editorial: "image",
+  reassurance: "check",
+};
 
 function sectionNeuve(type: Section["type"]): Section {
   const id = nouvelId(type);
@@ -74,7 +87,7 @@ export function EditeurAccueil({ sections, produits, univers }: { sections: Sect
                 <Saisie value={s.boutonDecouvrir} onChange={(e) => maj({ ...s, boutonDecouvrir: e.target.value })} />
               </Champ>
             </div>
-            <p className="text-sm text-muted">Les couleurs de fond viennent de chaque produit (Produits › Couleurs du produit).</p>
+            <p className="text-[11px] text-muted">Les couleurs de fond viennent de chaque produit (Produits › Couleurs du produit).</p>
           </div>
         );
       case "pastilles":
@@ -197,8 +210,8 @@ export function EditeurAccueil({ sections, produits, univers }: { sections: Sect
                 <Champ label="Icône">
                   <div className="flex flex-wrap gap-1">
                     {Object.entries(ICONES).map(([nom, ic]) => (
-                      <button key={nom} type="button" title={ic.nom} onClick={() => set({ ...it, icone: nom })} className={`grid size-9 place-items-center rounded-lg border ${it.icone === nom ? "border-bissap bg-bissap text-white" : "border-line bg-white"}`}>
-                        <IconeNommee nom={nom} className="size-5" />
+                      <button key={nom} type="button" title={ic.nom} onClick={() => set({ ...it, icone: nom })} className={`grid size-7 place-items-center rounded-md border ${it.icone === nom ? "border-ink bg-ink text-white" : "border-line bg-white"}`}>
+                        <IconeNommee nom={nom} className="size-4" />
                       </button>
                     ))}
                   </div>
@@ -227,41 +240,43 @@ export function EditeurAccueil({ sections, produits, univers }: { sections: Sect
 
   return (
     <>
-      <ol className="space-y-3">
+      <ol className="space-y-1.5">
         {b.valeur.map((s, i) => {
           const def = typesSections.find((t) => t.type === s.type)!;
           const ouvert = ouverte === s.id;
           return (
-            <li key={s.id} className={`rounded-2xl border bg-white transition ${ouvert ? "border-ink" : "border-line"} ${s.visible ? "" : "opacity-60"}`}>
-              <div className="flex items-center gap-3 p-4">
-                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-creme text-sm font-bold">{i + 1}</span>
+            <li key={s.id} className={`rounded-xl border bg-white transition ${ouvert ? "border-ink/40 shadow-sm" : "border-line"} ${s.visible ? "" : "opacity-55"}`}>
+              <div className="flex items-center gap-2.5 px-3 py-2">
+                <span className="grid size-6 shrink-0 place-items-center rounded-md bg-creme text-[11px] font-semibold text-muted">{i + 1}</span>
+                <PastilleIcone nom={ICONES_SECTIONS[s.type]} ton="gris" taille="sm" />
                 <button className="min-w-0 flex-1 text-left" onClick={() => setOuverte(ouvert ? null : s.id)}>
-                  <span className="block font-bold">{def.nom}</span>
-                  <span className="block truncate text-sm text-muted">{resume(s) || def.description}</span>
+                  <span className="block text-[13px] font-medium leading-tight">{def.nom}</span>
+                  <span className="block truncate text-[11px] text-muted">{resume(s) || def.description}</span>
                 </button>
-                <button onClick={() => maj(i, { ...s, visible: !s.visible })} className={`hidden rounded-full px-3 py-1 text-xs font-semibold sm:block ${s.visible ? "bg-sauge/15 text-sauge" : "bg-line text-muted"}`}>
+                <button onClick={() => maj(i, { ...s, visible: !s.visible })} className={`hidden h-6 items-center gap-1 rounded-md px-2 text-[11px] font-medium sm:inline-flex ${s.visible ? "bg-[#2f8f5b]/10 text-[#2f8f5b]" : "bg-ink/5 text-muted"}`} title="Afficher / masquer">
+                  <Icone nom="oeil" className="size-3.5" />
                   {s.visible ? "Visible" : "Masquée"}
                 </button>
                 <div className="flex shrink-0">
-                  <button onClick={() => deplacer(i, -1)} disabled={i === 0} className="grid size-9 place-items-center rounded-lg hover:bg-line disabled:opacity-30" aria-label="Monter">
-                    ↑
+                  <button onClick={() => deplacer(i, -1)} disabled={i === 0} className="grid size-7 place-items-center rounded-md text-muted hover:bg-ink/5 hover:text-ink disabled:opacity-25" aria-label="Monter">
+                    <Icone nom="haut" className="size-4" />
                   </button>
-                  <button onClick={() => deplacer(i, 1)} disabled={i === b.valeur.length - 1} className="grid size-9 place-items-center rounded-lg hover:bg-line disabled:opacity-30" aria-label="Descendre">
-                    ↓
+                  <button onClick={() => deplacer(i, 1)} disabled={i === b.valeur.length - 1} className="grid size-7 place-items-center rounded-md text-muted hover:bg-ink/5 hover:text-ink disabled:opacity-25" aria-label="Descendre">
+                    <Icone nom="bas" className="size-4" />
                   </button>
-                  <button onClick={() => setOuverte(ouvert ? null : s.id)} className="grid size-9 place-items-center rounded-lg hover:bg-line" aria-label="Modifier">
-                    {ouvert ? "▴" : "✎"}
+                  <button onClick={() => setOuverte(ouvert ? null : s.id)} className={`grid size-7 place-items-center rounded-md hover:bg-ink/5 ${ouvert ? "bg-ink text-white hover:bg-ink" : "text-muted hover:text-ink"}`} aria-label="Modifier">
+                    <Icone nom={ouvert ? "haut" : "crayon"} className="size-3.5" />
                   </button>
                 </div>
               </div>
               {ouvert && (
-                <div className="border-t border-line p-4">
-                  <div className="mb-4 sm:hidden">
+                <div className="space-y-3 border-t border-line p-3">
+                  <div className="sm:hidden">
                     <Interrupteur checked={s.visible} onChange={(visible) => maj(i, { ...s, visible })} label="Section visible" />
                   </div>
                   {editeur(s, (v) => maj(i, v))}
-                  <div className="mt-5 flex justify-end border-t border-line pt-4">
-                    <Bouton variante="danger" onClick={() => confirm("Supprimer cette section ?") && b.setValeur(b.valeur.filter((_, k) => k !== i))}>
+                  <div className="flex justify-end border-t border-line pt-3">
+                    <Bouton variante="danger" icone="poubelle" onClick={() => confirm("Supprimer cette section ?") && b.setValeur(b.valeur.filter((_, k) => k !== i))}>
                       Supprimer la section
                     </Bouton>
                   </div>
@@ -272,11 +287,11 @@ export function EditeurAccueil({ sections, produits, univers }: { sections: Sect
         })}
       </ol>
 
-      <div className="mt-4">
+      <div className="mt-3">
         {ajout ? (
-          <div className="rounded-2xl border border-dashed border-ink bg-white p-4">
-            <p className="mb-3 font-bold">Quelle section ajouter ?</p>
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="rounded-xl border border-dashed border-ink/40 bg-white p-3">
+            <p className="mb-2.5 text-[13px] font-semibold">Quelle section ajouter ?</p>
+            <div className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">
               {typesSections.map((t) => (
                 <button
                   key={t.type}
@@ -286,20 +301,23 @@ export function EditeurAccueil({ sections, produits, univers }: { sections: Sect
                     setOuverte(s.id);
                     setAjout(false);
                   }}
-                  className="rounded-xl border border-line p-3 text-left hover:border-ink"
+                  className="flex items-start gap-2.5 rounded-lg border border-line p-2.5 text-left hover:border-ink/40 hover:bg-creme-light"
                 >
-                  <span className="block font-semibold">{t.nom}</span>
-                  <span className="text-sm text-muted">{t.description}</span>
+                  <PastilleIcone nom={ICONES_SECTIONS[t.type]} ton="rouge" taille="sm" />
+                  <span>
+                    <span className="block text-[13px] font-medium">{t.nom}</span>
+                    <span className="text-[11px] leading-snug text-muted">{t.description}</span>
+                  </span>
                 </button>
               ))}
             </div>
-            <Bouton variante="discret" className="mt-3" onClick={() => setAjout(false)}>
+            <Bouton variante="discret" className="mt-2" onClick={() => setAjout(false)}>
               Annuler
             </Bouton>
           </div>
         ) : (
-          <Bouton variante="secondaire" onClick={() => setAjout(true)}>
-            + Ajouter une section
+          <Bouton variante="secondaire" icone="plus" onClick={() => setAjout(true)}>
+            Ajouter une section
           </Bouton>
         )}
       </div>

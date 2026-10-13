@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Icone } from "@/components/admin/icones";
 import { MenuAdmin } from "@/components/admin/menu";
 import { exigerAdmin } from "@/lib/auth";
 import { ADMIN_PAR_DEFAUT, lireBase } from "@/lib/db";
@@ -13,12 +14,14 @@ export default async function EspaceAdmin({ children }: LayoutProps<"/admin">) {
   const motDePasseParDefaut = !!compte && verifierMotDePasse(ADMIN_PAR_DEFAUT.motDePasse, compte.hash);
 
   return (
-    <div className="lg:pl-64">
+    <div className="text-[13px] lg:pl-56">
       <MenuAdmin admin={admin} logo={base.reglages.identite.logo} compteurs={{ commandes: enAttente, stocks: alertes }} />
-      <main className="mx-auto max-w-6xl px-4 pb-24 pt-20 md:px-8 lg:pt-10">
+      <main className="mx-auto max-w-6xl px-4 pb-20 pt-16 md:px-6 lg:pt-6">
         {motDePasseParDefaut && (
-          <Link href="/admin/parametres#securite" className="mb-6 block rounded-2xl bg-bissap px-5 py-4 text-sm font-semibold text-white">
-            ⚠ Vous utilisez le mot de passe par défaut. Changez-le maintenant dans Paramètres › Sécurité.
+          <Link href="/admin/parametres#securite" className="mb-4 flex items-center gap-2 rounded-lg border border-[#d9a521]/40 bg-[#d9a521]/10 px-3 py-2 text-xs font-medium text-[#7a5c0c]">
+            <Icone nom="alerte" className="size-4 shrink-0" />
+            Mot de passe par défaut : changez-le dans Paramètres › Sécurité.
+            <span className="ml-auto font-semibold underline">Changer</span>
           </Link>
         )}
         {children}

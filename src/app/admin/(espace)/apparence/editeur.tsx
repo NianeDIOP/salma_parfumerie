@@ -1,5 +1,7 @@
 "use client";
 
+import { Icone, type NomIcone } from "@/components/admin/icones";
+import { classeOnglet } from "@/components/admin/styles";
 import { useState } from "react";
 import { BarreEnregistrer, Bouton, Carte, Champ, ChampLien, Couleur, Interrupteur, Liste, ListeOrdonnee, Notification, Saisie, useAction, useBrouillon, Zone } from "@/components/admin/ui";
 import { enregistrerReglages } from "@/lib/actions/admin";
@@ -8,12 +10,12 @@ import { polices, type Couleurs, type Lien, type Police, type Reglages } from "@
 
 type Valeur = Pick<Reglages, "identite" | "entete" | "pied" | "mobile">;
 
-const onglets = [
-  { id: "identite", label: "Identité & couleurs" },
-  { id: "entete", label: "En-tête" },
-  { id: "pied", label: "Pied de page" },
-  { id: "mobile", label: "Barre mobile" },
-] as const;
+const onglets: { id: "identite" | "entete" | "pied" | "mobile"; label: string; icone: NomIcone }[] = [
+  { id: "identite", label: "Identité & couleurs", icone: "couleur" },
+  { id: "entete", label: "En-tête", icone: "menu" },
+  { id: "pied", label: "Pied de page", icone: "calques" },
+  { id: "mobile", label: "Barre mobile", icone: "mobile" },
+];
 
 const nomsCouleurs: Record<keyof Couleurs, string> = {
   primaire: "Couleur principale (boutons, accents)",
@@ -41,18 +43,19 @@ export function EditeurApparence(initial: Valeur) {
 
   return (
     <>
-      <div className="no-scrollbar -mx-4 mb-5 flex gap-2 overflow-x-auto px-4 md:mx-0 md:px-0">
+      <div className="no-scrollbar -mx-4 mb-4 flex gap-1.5 overflow-x-auto px-4 md:mx-0 md:px-0">
         {onglets.map((o) => (
-          <button key={o.id} onClick={() => setOnglet(o.id)} className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold ${onglet === o.id ? "bg-ink text-white" : "border border-line bg-white"}`}>
+          <button key={o.id} onClick={() => setOnglet(o.id)} className={classeOnglet(onglet === o.id)}>
+            <Icone nom={o.icone} className="size-3.5" />
             {o.label}
           </button>
         ))}
       </div>
 
       {onglet === "identite" && (
-        <div className="grid gap-4 lg:grid-cols-[1.3fr_1fr]">
-          <div className="space-y-4">
-            <Carte titre="Identité">
+        <div className="grid gap-3 lg:grid-cols-[1.3fr_1fr]">
+          <div className="space-y-3">
+            <Carte titre="Identité" icone="texte">
               <div className="grid gap-3 sm:grid-cols-2">
                 <Champ label="Logo (texte)">
                   <Saisie value={v.identite.logo} onChange={(e) => setIdentite({ logo: e.target.value })} />
@@ -73,8 +76,9 @@ export function EditeurApparence(initial: Valeur) {
             </Carte>
             <Carte
               titre="Couleurs"
+              icone="couleur"
               actions={
-                <Bouton variante="discret" onClick={() => setIdentite({ couleurs: reglagesParDefaut.identite.couleurs })}>
+                <Bouton variante="discret" icone="retour" className="h-7 px-2 text-xs" onClick={() => setIdentite({ couleurs: reglagesParDefaut.identite.couleurs })}>
                   Couleurs d&apos;origine
                 </Bouton>
               }
@@ -85,15 +89,17 @@ export function EditeurApparence(initial: Valeur) {
                 ))}
               </div>
             </Carte>
-            <Carte titre="Effets">
+            <Carte titre="Effets" icone="etoile">
               <Interrupteur checked={v.identite.curseur} onChange={(curseur) => setIdentite({ curseur })} label="Curseur signature (ordinateur)" />
               <Interrupteur checked={v.identite.transitionPages} onChange={(transitionPages) => setIdentite({ transitionPages })} label="Rideau de transition entre les pages" />
             </Carte>
           </div>
           {/* Aperçu */}
           <div className="lg:sticky lg:top-6 lg:self-start">
-            <p className="mb-2 text-sm font-semibold text-muted">Aperçu</p>
-            <div className="overflow-hidden rounded-2xl border border-line shadow-sm" style={{ background: c.fond, color: c.texte }}>
+            <p className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-muted">
+              <Icone nom="oeil" className="size-3.5" /> Aperçu
+            </p>
+            <div className="overflow-hidden rounded-xl border border-line shadow-sm" style={{ background: c.fond, color: c.texte }}>
               <div className="flex items-center justify-between border-b px-4 py-3" style={{ borderColor: c.ligne }}>
                 <span className="text-xl font-extrabold">
                   {v.identite.logo} <span className="text-xs font-normal" style={{ color: c.texteDoux }}>{v.identite.sousTitre}</span>
@@ -103,7 +109,7 @@ export function EditeurApparence(initial: Valeur) {
                 </span>
               </div>
               <div className="p-5" style={{ background: c.primaire, color: "#fff" }}>
-                <p className="text-3xl font-extrabold">Titre du hero</p>
+                <p className="text-2xl font-extrabold">Titre du hero</p>
                 <p className="text-sm opacity-80">{v.identite.slogan}</p>
               </div>
               <div className="space-y-3 p-5">
@@ -128,17 +134,17 @@ export function EditeurApparence(initial: Valeur) {
       )}
 
       {onglet === "entete" && (
-        <div className="space-y-4">
-          <Carte titre="Menu principal" description="Liens affichés dans l'en-tête sur ordinateur.">
+        <div className="space-y-3">
+          <Carte titre="Menu principal" icone="menu" description="Liens de l'en-tête sur ordinateur">
             <ListeOrdonnee items={v.entete.liens} onChange={(liens) => setEntete({ liens })} nouveau={nouveauLien} libelleAjout="Ajouter un lien" rendu={(l, maj) => <ChampLien value={l} onChange={maj} />} />
           </Carte>
-          <Carte titre="Bouton mis en avant">
+          <Carte titre="Bouton mis en avant" icone="lien">
             <Interrupteur checked={v.entete.bouton.visible} onChange={(visible) => setEntete({ bouton: { ...v.entete.bouton, visible } })} label="Afficher le bouton" />
             <div className="mt-3">
               <ChampLien value={v.entete.bouton} onChange={(l) => setEntete({ bouton: { ...v.entete.bouton, ...l } })} />
             </div>
           </Carte>
-          <Carte titre="Icônes">
+          <Carte titre="Icônes de l'en-tête" icone="utilisateur">
             <Interrupteur checked={v.entete.afficherCompte} onChange={(afficherCompte) => setEntete({ afficherCompte })} label="Icône « Mon compte »" />
             <Interrupteur checked={v.entete.afficherFavoris} onChange={(afficherFavoris) => setEntete({ afficherFavoris })} label="Icône « Favoris »" />
           </Carte>
@@ -146,8 +152,8 @@ export function EditeurApparence(initial: Valeur) {
       )}
 
       {onglet === "pied" && (
-        <div className="space-y-4">
-          <Carte titre="Présentation">
+        <div className="space-y-3">
+          <Carte titre="Présentation" icone="texte">
             <Champ label="Texte de présentation">
               <Zone value={v.pied.description} onChange={(e) => setPied({ description: e.target.value })} rows={2} />
             </Champ>
@@ -158,7 +164,7 @@ export function EditeurApparence(initial: Valeur) {
               <Interrupteur checked={v.pied.grandLogo} onChange={(grandLogo) => setPied({ grandLogo })} label="Grand logo en bas de page" />
             </div>
           </Carte>
-          <Carte titre="Colonnes de liens">
+          <Carte titre="Colonnes de liens" icone="lien">
             <ListeOrdonnee
               items={v.pied.colonnes}
               onChange={(colonnes) => setPied({ colonnes })}
@@ -174,7 +180,7 @@ export function EditeurApparence(initial: Valeur) {
               )}
             />
           </Carte>
-          <Carte titre="Newsletter">
+          <Carte titre="Newsletter" icone="message">
             <Interrupteur checked={v.pied.newsletter.visible} onChange={(visible) => setPied({ newsletter: { ...v.pied.newsletter, visible } })} label="Afficher l'inscription" />
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <Champ label="Texte du champ">
@@ -185,14 +191,14 @@ export function EditeurApparence(initial: Valeur) {
               </Champ>
             </div>
           </Carte>
-          <Carte titre="Logos de paiement affichés">
+          <Carte titre="Logos de paiement affichés" icone="carte">
             <ListeOrdonnee items={v.pied.paiements} onChange={(paiements) => setPied({ paiements })} nouveau={() => ""} libelleAjout="Ajouter" rendu={(p, maj) => <Saisie value={p} onChange={(e) => maj(e.target.value)} />} />
           </Carte>
         </div>
       )}
 
       {onglet === "mobile" && (
-        <Carte titre="Barre d'onglets (mobile)" description="Libellés des 5 onglets en bas de l'écran sur téléphone.">
+        <Carte titre="Barre d'onglets (mobile)" icone="mobile" description="Libellés des 5 onglets en bas de l'écran sur téléphone">
           <div className="grid gap-3 sm:grid-cols-5">
             {(Object.keys(v.mobile.onglets) as (keyof Reglages["mobile"]["onglets"])[]).map((k) => (
               <Champ key={k} label={k.charAt(0).toUpperCase() + k.slice(1)}>

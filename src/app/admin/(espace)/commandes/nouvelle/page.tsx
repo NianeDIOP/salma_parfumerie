@@ -6,7 +6,7 @@ export default async function PageNouvelleVente() {
   const base = await lireBase();
   return (
     <>
-      <EnTetePage titre="Nouvelle vente" description="Enregistrez une vente faite en boutique ou une commande reçue sur WhatsApp. Le stock et les statistiques sont mis à jour." />
+      <EnTetePage icone="plus" ton="vert" titre="Nouvelle vente" description="Vente en boutique ou commande WhatsApp · stock et statistiques mis à jour" />
       <NouvelleVente produits={base.produits} zones={base.reglages.livraison.zones.filter((z) => z.actif)} />
     </>
   );

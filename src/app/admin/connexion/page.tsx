@@ -8,13 +8,15 @@ export default async function Connexion() {
   const { reglages } = await lireBase();
   return (
     <main className="grid min-h-screen place-items-center px-4">
-      <div className="w-full max-w-sm">
-        <p className="text-center text-4xl font-extrabold tracking-tight">
-          {reglages.identite.logo} <span className="text-base font-medium text-muted">gestion</span>
-        </p>
-        <div className="mt-8 rounded-3xl border border-line bg-white p-6 shadow-sm">
-          <h1 className="text-xl font-bold">Connexion administrateur</h1>
-          <p className="mt-1 text-sm text-muted">Espace réservé à la gestion du site.</p>
+      <div className="w-full max-w-[360px]">
+        <div className="flex items-center justify-center gap-2">
+          <span className="grid size-9 place-items-center rounded-lg bg-bissap text-lg font-extrabold text-white">{reglages.identite.logo.charAt(0).toUpperCase()}</span>
+          <span className="text-xl font-bold tracking-tight">{reglages.identite.logo}</span>
+          <span className="rounded bg-ink/5 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted">Admin</span>
+        </div>
+        <div className="mt-6 rounded-xl border border-line bg-white p-5 shadow-sm">
+          <h1 className="text-base font-semibold">Connexion</h1>
+          <p className="mt-0.5 text-xs text-muted">Espace réservé à la gestion du site.</p>
           <FormulaireConnexion />
         </div>
       </div>

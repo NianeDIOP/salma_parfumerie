@@ -1,5 +1,6 @@
 "use client";
 
+import { Icone } from "@/components/admin/icones";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Bouton, Carte, Champ, ChoixProduits, Interrupteur, Liste, Notification, Saisie, SaisieNombre, useAction, Zone } from "@/components/admin/ui";
@@ -30,9 +31,9 @@ export function NouvelleVente({ produits, zones }: { produits: Produit[]; zones:
   const frais = zone === "boutique" ? 0 : (zones.find((z) => z.id === zone)?.frais ?? 0);
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
-      <div className="space-y-4">
-        <Carte titre="Produits">
+    <div className="grid gap-3 lg:grid-cols-[1.5fr_1fr]">
+      <div className="space-y-3">
+        <Carte titre="Produits" icone="produits">
           <ChoixProduits
             produits={produits}
             valeur={[]}
@@ -41,21 +42,21 @@ export function NouvelleVente({ produits, zones }: { produits: Produit[]; zones:
               if (p) setLignes([...lignes, { slug: p.slug, contenance: p.contenances[0].label, quantite: 1 }]);
             }}
           />
-          <ul className="mt-4 divide-y divide-line">
+          <ul className="mt-3 divide-y divide-line">
             {lignes.map((l, i) => {
               const p = trouver(l.slug)!;
               const c = p.contenances.find((x) => x.label === l.contenance)!;
               const maj = (v: Partial<Ligne>) => setLignes(lignes.map((x, k) => (k === i ? { ...x, ...v } : x)));
               return (
-                <li key={i} className="flex flex-wrap items-center gap-3 py-3">
-                  <span className="min-w-0 flex-1 font-semibold">
+                <li key={i} className="flex flex-wrap items-center gap-2 py-2">
+                  <span className="min-w-0 flex-1 text-[13px] font-medium">
                     {p.marque} {p.nom}
                   </span>
                   <Liste value={l.contenance} onChange={(e) => maj({ contenance: e.target.value })} options={p.contenances.map((x) => ({ value: x.label, label: `${x.label} · ${formatFCFA(x.prix)} F (stock ${x.stock})` }))} className="w-auto" />
                   <SaisieNombre value={l.quantite} min={1} max={c.stock} onChange={(n) => maj({ quantite: Math.max(1, n) })} className="w-20" />
-                  <span className="w-24 text-right tabular-nums">{formatFCFA(c.prix * l.quantite)} F</span>
-                  <button onClick={() => setLignes(lignes.filter((_, k) => k !== i))} className="text-bissap" aria-label="Retirer">
-                    ✕
+                  <span className="w-20 text-right text-[13px] tabular-nums">{formatFCFA(c.prix * l.quantite)} F</span>
+                  <button onClick={() => setLignes(lignes.filter((_, k) => k !== i))} className="grid size-7 place-items-center rounded-md text-[#c0392b] hover:bg-[#c0392b]/10" aria-label="Retirer">
+                    <Icone nom="poubelle" className="size-3.5" />
                   </button>
                 </li>
               );
@@ -63,7 +64,7 @@ export function NouvelleVente({ produits, zones }: { produits: Produit[]; zones:
           </ul>
         </Carte>
 
-        <Carte titre="Client">
+        <Carte titre="Client" icone="utilisateur">
           <div className="grid gap-3 sm:grid-cols-2">
             <Champ label="Nom">
               <Saisie value={client.nom} onChange={(e) => setClient({ ...client, nom: e.target.value })} />
@@ -81,8 +82,8 @@ export function NouvelleVente({ produits, zones }: { produits: Produit[]; zones:
         </Carte>
       </div>
 
-      <div className="space-y-4">
-        <Carte titre="Vente">
+      <div className="space-y-3">
+        <Carte titre="Vente" icone="argent">
           <div className="space-y-3">
             <Champ label="Canal">
               <Liste value={canal} onChange={(e) => setCanal(e.target.value as "boutique" | "whatsapp")} options={[{ value: "boutique", label: "Vente en boutique" }, { value: "whatsapp", label: "Commande WhatsApp" }]} />
@@ -101,18 +102,19 @@ export function NouvelleVente({ produits, zones }: { produits: Produit[]; zones:
               <Zone value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
             </Champ>
           </div>
-          <dl className="mt-5 space-y-1 border-t border-line pt-4">
-            <div className="flex justify-between text-sm">
+          <dl className="mt-3 space-y-1 border-t border-line pt-3">
+            <div className="flex justify-between text-xs">
               <dt className="text-muted">Sous-total</dt>
               <dd>{formatFCFA(sousTotal)} F</dd>
             </div>
-            <div className="flex justify-between text-xl font-bold">
+            <div className="flex justify-between text-base font-bold">
               <dt>Total</dt>
               <dd>{formatFCFA(Math.max(0, sousTotal - remise) + frais)} F</dd>
             </div>
           </dl>
           <Bouton
-            className="mt-4 w-full py-3.5"
+            icone="check"
+            className="mt-3 w-full"
             disabled={enCours || !lignes.length || !client.nom}
             onClick={() => lancer(() => creerVente({ canal, client, lignes, zone, moyen, remise, payee, notes }), (r) => r.ok && "numero" in r && router.push(`/admin/commandes/${r.numero}`))}
           >

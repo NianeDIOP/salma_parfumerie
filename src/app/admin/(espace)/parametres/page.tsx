@@ -8,7 +8,7 @@ export default async function PageParametres() {
   const moi = await adminConnecte();
   return (
     <>
-      <EnTetePage titre="Paramètres" description="Coordonnées, référencement Google et accès à l'administration." />
+      <EnTetePage icone="parametres" ton="gris" titre="Paramètres" description="Coordonnées, référencement et accès à l'administration" />
       <Parametres contact={base.reglages.contact} seo={base.reglages.seo} admins={base.admins.map(({ email, nom }) => ({ email, nom }))} moi={moi?.email ?? ""} />
     </>
   );

@@ -9,8 +9,8 @@ export function EditeurLivraison(props: Pick<Reglages, "livraison" | "paiements"
   const v = b.valeur;
   const { enCours, retour, lancer } = useAction();
   return (
-    <div className="space-y-4">
-      <Carte titre="Zones de livraison" description="Chaque zone apparaît au client lors de la commande.">
+    <div className="space-y-3">
+      <Carte titre="Zones de livraison" icone="livraison" description="Proposées au client lors de la commande">
         <ListeOrdonnee
           items={v.livraison.zones}
           onChange={(zones) => b.setValeur({ ...v, livraison: { ...v.livraison, zones } })}
@@ -38,7 +38,7 @@ export function EditeurLivraison(props: Pick<Reglages, "livraison" | "paiements"
         />
       </Carte>
 
-      <Carte titre="Moyens de paiement">
+      <Carte titre="Moyens de paiement" icone="carte">
         <div className="divide-y divide-line">
           {moyensPaiement.map((m) => (
             <Interrupteur key={m.id} checked={v.paiements[m.id]} onChange={(on) => b.setValeur({ ...v, paiements: { ...v.paiements, [m.id]: on } })} label={m.label} aide={m.detail} />
@@ -46,7 +46,7 @@ export function EditeurLivraison(props: Pick<Reglages, "livraison" | "paiements"
         </div>
       </Carte>
 
-      <Carte titre="Options de commande">
+      <Carte titre="Options de commande" icone="parametres">
         <Interrupteur checked={v.livraison.echantillonOffert} onChange={(echantillonOffert) => b.setValeur({ ...v, livraison: { ...v.livraison, echantillonOffert } })} label="Échantillon offert au choix" />
         <Interrupteur checked={v.boutique.paiementEnPlusieursFois} onChange={(paiementEnPlusieursFois) => b.setValeur({ ...v, boutique: { ...v.boutique, paiementEnPlusieursFois } })} label="Afficher « ou 3 × … » sur les fiches produit" />
         <div className="mt-3 grid gap-3">

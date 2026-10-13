@@ -7,7 +7,7 @@ export default async function PageUnivers() {
   const compte = Object.fromEntries(base.univers.map((u) => [u.slug, base.produits.filter((p) => p.univers === u.slug).length]));
   return (
     <>
-      <EnTetePage titre="Univers" description="Les grandes catégories du site (Parfums, Huiles…) : nom, texte, photo, couleur et ordre d'affichage." />
+      <EnTetePage icone="univers" ton="violet" titre="Univers" description="Catégories du site : nom, texte, photo, couleurs et ordre" />
       <EditeurUnivers univers={base.univers} compte={compte} />
     </>
   );

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Icone } from "@/components/admin/icones";
+import { classeBouton, classeSaisie } from "@/components/admin/styles";
 import { EnTetePage } from "@/components/admin/ui";
 import { formatFCFA } from "@/lib/catalogue";
 import { lireBase } from "@/lib/db";
@@ -24,41 +26,46 @@ export default async function Clients({ searchParams }: PageProps<"/admin/client
   return (
     <>
       <EnTetePage
+        icone="clients"
+        ton="vert"
         titre="Clients"
         description={`${parTel.size} client(s) · classés par montant dépensé`}
         actions={
-          <a href={csv} download="clients-salma.csv" className="rounded-full border border-line bg-white px-5 py-2.5 text-sm font-semibold hover:border-ink">
-            Exporter (Excel / CSV)
+          <a href={csv} download="clients-salma.csv" className={classeBouton("secondaire")}>
+            <Icone nom="telecharger" /> Exporter CSV
           </a>
         }
       />
-      <form className="mb-4">
-        <input name="q" defaultValue={q} placeholder="Rechercher un client…" className="w-full rounded-xl border border-line bg-white px-4 py-3 outline-none focus:border-ink md:max-w-md" />
+      <form className="relative mb-3 md:max-w-sm">
+        <Icone nom="recherche" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" />
+        <input name="q" defaultValue={q} placeholder="Rechercher un client…" className={`${classeSaisie} pl-9`} />
       </form>
       {clients.length === 0 ? (
-        <p className="rounded-2xl border border-line bg-white p-10 text-center text-muted">Les clients apparaîtront ici après leurs premières commandes.</p>
+        <p className="rounded-xl border border-line bg-white p-8 text-center text-xs text-muted">Les clients apparaîtront ici après leurs premières commandes.</p>
       ) : (
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid gap-2 md:grid-cols-2">
           {clients.map((c) => (
-            <div key={c.telephone} className="rounded-2xl border border-line bg-white p-4">
+            <div key={c.telephone} className="rounded-xl border border-line bg-white p-3">
               <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-lg font-bold">{c.nom}</p>
-                  <p className="text-sm text-muted">{c.telephone}</p>
-                  {c.adresse && <p className="text-sm text-muted">{c.adresse}</p>}
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-md bg-[#2f8f5b]/10 text-[11px] font-bold text-[#2f8f5b]">{c.nom.slice(0, 2).toUpperCase()}</span>
+                  <div className="min-w-0">
+                  <p className="truncate text-[13px] font-semibold">{c.nom}</p>
+                  <p className="truncate text-[11px] text-muted">{c.telephone}{c.adresse && ` · ${c.adresse}`}</p>
+                  </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-bold tabular-nums">{formatFCFA(c.total)} F</p>
-                  <p className="text-sm text-muted">{c.commandes} commande(s)</p>
+                  <p className="text-[13px] font-bold tabular-nums">{formatFCFA(c.total)} F</p>
+                  <p className="text-[11px] text-muted">{c.commandes} commande(s)</p>
                 </div>
               </div>
-              <div className="mt-3 flex flex-wrap gap-1.5">
+              <div className="mt-2.5 flex flex-wrap items-center gap-1">
                 {c.numeros.slice(0, 6).map((n) => (
-                  <Link key={n} href={`/admin/commandes/${n}`} className="rounded-full bg-creme px-2.5 py-1 text-xs font-semibold hover:bg-line">
+                  <Link key={n} href={`/admin/commandes/${n}`} className="rounded bg-creme px-1.5 py-0.5 text-[11px] font-medium hover:bg-line">
                     {n}
                   </Link>
                 ))}
-                <a href={`https://wa.me/${c.telephone.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="ml-auto rounded-full bg-[#25d366] px-3 py-1 text-xs font-semibold text-white">
+                <a href={`https://wa.me/${c.telephone.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="ml-auto inline-flex h-6 items-center rounded-md bg-[#25d366] px-2 text-[11px] font-medium text-white">
                   WhatsApp
                 </a>
               </div>

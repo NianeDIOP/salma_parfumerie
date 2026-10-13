@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Icone } from "@/components/admin/icones";
 import { BadgeStatut } from "@/components/admin/statut";
+import { classeBouton } from "@/components/admin/styles";
+import { Carte } from "@/components/admin/ui";
 import { Photo } from "@/components/photo";
 import { formatFCFA } from "@/lib/catalogue";
 import { lireBase } from "@/lib/db";
@@ -12,45 +15,52 @@ export default async function DetailCommande({ params }: PageProps<"/admin/comma
   const base = await lireBase();
   const c = base.commandes.find((x) => x.numero === numero);
   if (!c) notFound();
-  const moyen = moyensPaiement.find((m) => m.id === c.paiement.moyen)?.label;
+  const moyen = moyensPaiement.find((m) => m.id === c.paiement.moyen);
   const whatsapp = c.client.telephone.replace(/\D/g, "");
+  const etat = c.paiement.statut === "paye" ? { t: "Encaissé", c: "text-[#2f8f5b]" } : c.paiement.statut === "rembourse" ? { t: "Remboursé", c: "text-[#c0392b]" } : { t: "À encaisser", c: "text-[#a07a10]" };
 
   return (
     <>
-      <Link href="/admin/commandes" className="text-sm font-semibold text-muted hover:text-ink">
-        ← Commandes
+      <Link href="/admin/commandes" className="inline-flex items-center gap-1 text-xs font-medium text-muted hover:text-ink">
+        <Icone nom="retour" className="size-3.5" /> Commandes
       </Link>
-      <div className="mb-6 mt-3 flex flex-wrap items-center gap-3">
-        <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">{c.numero}</h1>
-        <BadgeStatut statut={c.statut} />
-        <span className="text-sm text-muted">
-          {new Date(c.date).toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" })} · {c.canal}
+      <div className="mb-4 mt-2 flex flex-wrap items-center gap-2.5">
+        <span className="grid size-9 place-items-center rounded-lg bg-[#3b6fd1]/10 text-[#3b6fd1]">
+          <Icone nom="commandes" className="size-[18px]" />
         </span>
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg font-bold md:text-xl">{c.numero}</h1>
+            <BadgeStatut statut={c.statut} />
+          </div>
+          <p className="text-xs text-muted">
+            {new Date(c.date).toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" })} · {c.canal === "site" ? "Site" : c.canal === "boutique" ? "Boutique" : "WhatsApp"}
+          </p>
+        </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
-        <div className="space-y-4">
-          <section className="rounded-2xl border border-line bg-white p-5">
-            <h2 className="text-lg font-bold">Articles</h2>
-            <ul className="mt-3 divide-y divide-line">
+      <div className="grid gap-3 lg:grid-cols-[1.5fr_1fr]">
+        <div className="space-y-3">
+          <Carte titre={`Articles · ${c.lignes.reduce((n, l) => n + l.quantite, 0)}`} icone="produits">
+            <ul className="-mx-4 divide-y divide-line border-y border-line">
               {c.lignes.map((l) => (
-                <li key={l.slug + l.contenance} className="flex items-center gap-4 py-3">
-                  <span className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-line">
-                    <Photo id={l.image} alt="" sizes="56px" />
+                <li key={l.slug + l.contenance} className="flex items-center gap-3 px-4 py-2.5">
+                  <span className="relative size-10 shrink-0 overflow-hidden rounded-md bg-line">
+                    <Photo id={l.image} alt="" sizes="40px" />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block font-semibold">
+                    <span className="block truncate text-[13px] font-medium">
                       {l.marque} {l.nom}
                     </span>
-                    <span className="text-sm text-muted">
+                    <span className="text-[11px] text-muted">
                       {l.contenance} · {formatFCFA(l.prix)} F × {l.quantite}
                     </span>
                   </span>
-                  <span className="font-semibold tabular-nums">{formatFCFA(l.prix * l.quantite)} F</span>
+                  <span className="text-[13px] font-semibold tabular-nums">{formatFCFA(l.prix * l.quantite)} F</span>
                 </li>
               ))}
             </ul>
-            <dl className="mt-3 space-y-1.5 border-t border-line pt-3 text-sm">
+            <dl className="mt-3 space-y-1 text-xs">
               <div className="flex justify-between">
                 <dt className="text-muted">Sous-total</dt>
                 <dd className="tabular-nums">{formatFCFA(c.sousTotal)} F</dd>
@@ -65,81 +75,83 @@ export default async function DetailCommande({ params }: PageProps<"/admin/comma
                 <dt className="text-muted">Livraison · {c.zone.label}</dt>
                 <dd className="tabular-nums">{c.zone.frais ? `${formatFCFA(c.zone.frais)} F` : "Offerte"}</dd>
               </div>
-              <div className="flex justify-between pt-1 text-lg font-bold">
+              <div className="flex justify-between border-t border-line pt-2 text-sm font-bold">
                 <dt>Total</dt>
                 <dd className="tabular-nums">{formatFCFA(c.total)} FCFA</dd>
               </div>
             </dl>
             {(c.echantillon || c.message) && (
-              <div className="mt-4 space-y-1 rounded-xl bg-creme-light p-3 text-sm">
+              <div className="mt-3 space-y-0.5 rounded-lg bg-creme-light p-2.5 text-xs">
                 {c.echantillon && (
                   <p>
-                    <strong>Échantillon :</strong> {base.produits.find((p) => p.slug === c.echantillon)?.nom ?? c.echantillon}
+                    <span className="text-muted">Échantillon :</span> {base.produits.find((p) => p.slug === c.echantillon)?.nom ?? c.echantillon}
                   </p>
                 )}
                 {c.message && (
                   <p>
-                    <strong>Message cadeau :</strong> « {c.message} »
+                    <span className="text-muted">Message cadeau :</span> « {c.message} »
                   </p>
                 )}
               </div>
             )}
-          </section>
+          </Carte>
 
-          <section className="rounded-2xl border border-line bg-white p-5">
-            <h2 className="text-lg font-bold">Historique</h2>
-            <ol className="mt-4 space-y-4">
+          <Carte titre="Historique" icone="historique">
+            <ol className="relative space-y-3 border-l border-line pl-4">
               {[...c.historique].reverse().map((h, i) => {
                 const s = statuts.find((x) => x.id === h.statut)!;
                 return (
-                  <li key={i} className="flex gap-3">
-                    <span className="mt-1.5 size-2.5 shrink-0 rounded-full" style={{ background: s.couleur }} />
-                    <div>
-                      <p className="font-semibold">{s.label}</p>
-                      <p className="text-sm text-muted">
-                        {new Date(h.date).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" })}
-                        {h.note && ` · ${h.note}`}
-                      </p>
-                    </div>
+                  <li key={i} className="relative">
+                    <span className="absolute -left-[21px] top-1 size-2.5 rounded-full ring-2 ring-white" style={{ background: s.couleur }} />
+                    <p className="text-[13px] font-medium">{s.label}</p>
+                    <p className="text-[11px] text-muted">
+                      {new Date(h.date).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" })}
+                      {h.note && ` · ${h.note}`}
+                    </p>
                   </li>
                 );
               })}
             </ol>
-          </section>
+          </Carte>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           <ActionsCommande commande={c} />
 
-          <section className="rounded-2xl border border-line bg-white p-5">
-            <h2 className="text-lg font-bold">Client</h2>
-            <p className="mt-3 font-semibold">{c.client.nom}</p>
-            <p className="text-sm">{c.client.telephone}</p>
-            {c.client.adresse && <p className="mt-2 text-sm">{c.client.adresse}</p>}
-            {c.client.repere && <p className="text-sm text-muted">Repère : {c.client.repere}</p>}
-            <div className="mt-4 flex flex-wrap gap-2">
-              <a href={`tel:${c.client.telephone}`} className="rounded-full border border-line px-4 py-2 text-sm font-semibold hover:border-ink">
-                Appeler
+          <Carte titre="Client" icone="utilisateur">
+            <p className="text-[13px] font-semibold">{c.client.nom}</p>
+            <p className="text-xs text-muted">{c.client.telephone}</p>
+            {c.client.adresse && <p className="mt-1.5 text-xs">{c.client.adresse}</p>}
+            {c.client.repere && <p className="text-xs text-muted">Repère : {c.client.repere}</p>}
+            <div className="mt-3 flex gap-2">
+              <a href={`tel:${c.client.telephone}`} className={`${classeBouton("secondaire")} h-8 flex-1 text-xs`}>
+                <Icone nom="telephone" className="size-3.5" /> Appeler
               </a>
               <a
                 href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(`Bonjour ${c.client.nom.split(" ")[0]}, votre commande ${c.numero} est ${statuts.find((s) => s.id === c.statut)?.label.toLowerCase()}.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full bg-[#25d366] px-4 py-2 text-sm font-semibold text-white"
+                className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg bg-[#25d366] text-xs font-medium text-white hover:bg-[#1fb857]"
               >
-                WhatsApp
+                <Icone nom="message" className="size-3.5" /> WhatsApp
               </a>
             </div>
-          </section>
+          </Carte>
 
-          <section className="rounded-2xl border border-line bg-white p-5">
-            <h2 className="text-lg font-bold">Paiement</h2>
-            <p className="mt-3">{moyen}</p>
-            <p className={`text-sm font-semibold ${c.paiement.statut === "paye" ? "text-sauge" : "text-[#a07a10]"}`}>
-              {c.paiement.statut === "paye" ? "Encaissé" : c.paiement.statut === "rembourse" ? "Remboursé" : "À encaisser"}
-            </p>
-            {c.paiement.reference && <p className="text-sm text-muted">Réf. {c.paiement.reference}</p>}
-          </section>
+          <Carte titre="Paiement" icone="carte">
+            <div className="flex items-center gap-2.5">
+              {moyen && (
+                <span className="grid size-8 place-items-center rounded-md text-[10px] font-bold text-white" style={{ background: moyen.couleur }}>
+                  {moyen.sigle}
+                </span>
+              )}
+              <div>
+                <p className="text-[13px] font-medium">{moyen?.label}</p>
+                <p className={`text-xs font-semibold ${etat.c}`}>{etat.t}</p>
+              </div>
+            </div>
+            {c.paiement.reference && <p className="mt-2 text-[11px] text-muted">Réf. {c.paiement.reference}</p>}
+          </Carte>
         </div>
       </div>
     </>

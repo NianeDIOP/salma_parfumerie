@@ -6,7 +6,7 @@ export default async function Promotions() {
   const { codes } = await lireBase();
   return (
     <>
-      <EnTetePage titre="Codes promo" description="Créez des codes de réduction en pourcentage ou en montant fixe, avec un minimum d'achat." />
+      <EnTetePage icone="promo" ton="rouge" titre="Codes promo" description="Réductions en pourcentage ou en montant, avec minimum d'achat" />
       <EditeurCodes codes={codes} />
     </>
   );

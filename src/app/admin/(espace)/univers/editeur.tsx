@@ -15,9 +15,9 @@ export function EditeurUnivers({ univers, compte }: { univers: Univers[]; compte
         libelleAjout="Ajouter un univers"
         nouveau={() => ({ slug: "", nom: "", accroche: "", description: "", image: "", theme: { bg: "#1f2a5c", accent: "#f2d0d7", dark: true } })}
         rendu={(u, maj) => (
-          <div className="grid gap-4 md:grid-cols-[1fr_1fr]">
-            <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 md:grid-cols-[1fr_1fr]">
+            <div className="space-y-2.5">
+              <div className="grid grid-cols-2 gap-2.5">
                 <Champ label="Nom">
                   <Saisie value={u.nom} onChange={(e) => maj({ ...u, nom: e.target.value })} />
                 </Champ>

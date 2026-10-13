@@ -14,8 +14,8 @@ export function Parametres({ contact, seo, admins, moi }: Pick<Reglages, "contac
   const setContact = (x: Partial<Reglages["contact"]>) => b.setValeur({ ...v, contact: { ...v.contact, ...x } });
 
   return (
-    <div className="space-y-4">
-      <Carte titre="Coordonnées" description="Utilisées pour le bouton « Conseillère WhatsApp » et les pages du site.">
+    <div className="space-y-3">
+      <Carte titre="Coordonnées" icone="telephone" description="Bouton « Conseillère WhatsApp » et pages du site">
         <div className="grid gap-3 sm:grid-cols-2">
           <Champ label="Numéro WhatsApp" aide="Avec l'indicatif, sans + ni espaces : 221775665335">
             <Saisie value={v.contact.whatsapp} onChange={(e) => setContact({ whatsapp: e.target.value })} />
@@ -35,7 +35,7 @@ export function Parametres({ contact, seo, admins, moi }: Pick<Reglages, "contac
         </div>
       </Carte>
 
-      <Carte titre="Référencement (Google, partage WhatsApp)">
+      <Carte titre="Référencement" icone="globe" description="Google et aperçu des liens partagés">
         <Champ label="Titre du site">
           <Saisie value={v.seo.titre} onChange={(e) => b.setValeur({ ...v, seo: { ...v.seo, titre: e.target.value } })} />
         </Champ>
@@ -44,8 +44,8 @@ export function Parametres({ contact, seo, admins, moi }: Pick<Reglages, "contac
         </Champ>
       </Carte>
 
-      <div id="securite" className="grid gap-4 lg:grid-cols-2">
-        <Carte titre="Changer mon mot de passe">
+      <div id="securite" className="grid gap-3 lg:grid-cols-2">
+        <Carte titre="Mon mot de passe" icone="cadenas">
           <div className="space-y-3">
             <Champ label="Mot de passe actuel">
               <Saisie type="password" value={mdp.actuel} onChange={(e) => setMdp({ ...mdp, actuel: e.target.value })} autoComplete="current-password" />
@@ -56,22 +56,22 @@ export function Parametres({ contact, seo, admins, moi }: Pick<Reglages, "contac
             <Champ label="Confirmation">
               <Saisie type="password" value={mdp.confirmation} onChange={(e) => setMdp({ ...mdp, confirmation: e.target.value })} autoComplete="new-password" />
             </Champ>
-            {mdp.confirmation && mdp.confirmation !== mdp.nouveau && <p className="text-sm text-bissap">Les deux mots de passe ne correspondent pas.</p>}
-            <Bouton disabled={enCours || !mdp.actuel || mdp.nouveau.length < 8 || mdp.nouveau !== mdp.confirmation} onClick={() => lancer(() => changerMotDePasse(mdp.actuel, mdp.nouveau), (r) => r.ok && setMdp({ actuel: "", nouveau: "", confirmation: "" }))}>
+            {mdp.confirmation && mdp.confirmation !== mdp.nouveau && <p className="text-xs text-[#c0392b]">Les deux mots de passe ne correspondent pas.</p>}
+            <Bouton icone="cadenas" disabled={enCours || !mdp.actuel || mdp.nouveau.length < 8 || mdp.nouveau !== mdp.confirmation} onClick={() => lancer(() => changerMotDePasse(mdp.actuel, mdp.nouveau), (r) => r.ok && setMdp({ actuel: "", nouveau: "", confirmation: "" }))}>
               Modifier le mot de passe
             </Bouton>
           </div>
         </Carte>
 
-        <Carte titre="Administrateurs" description="Seules ces personnes peuvent se connecter à la gestion du site.">
+        <Carte titre="Administrateurs" icone="clients" description="Seules ces personnes accèdent à la gestion">
           <ul className="divide-y divide-line">
             {admins.map((a) => (
-              <li key={a.email} className="flex items-center justify-between gap-3 py-3">
+              <li key={a.email} className="flex items-center justify-between gap-3 py-2">
                 <span className="min-w-0">
-                  <span className="block truncate font-semibold">
+                  <span className="block truncate text-[13px] font-medium">
                     {a.nom} {a.email === moi && <span className="text-sm font-normal text-muted">(vous)</span>}
                   </span>
-                  <span className="block truncate text-sm text-muted">{a.email}</span>
+                  <span className="block truncate text-[11px] text-muted">{a.email}</span>
                 </span>
                 {a.email !== moi && (
                   <Bouton variante="discret" className="text-bissap" onClick={() => confirm(`Retirer l'accès de ${a.email} ?`) && lancer(() => supprimerAdmin(a.email))}>
@@ -81,14 +81,14 @@ export function Parametres({ contact, seo, admins, moi }: Pick<Reglages, "contac
               </li>
             ))}
           </ul>
-          <div className="mt-4 space-y-3 border-t border-line pt-4">
-            <p className="font-semibold">Ajouter un administrateur</p>
+          <div className="mt-3 space-y-2 border-t border-line pt-3">
+            <p className="text-xs font-medium text-ink/70">Ajouter un administrateur</p>
             <div className="grid gap-3 sm:grid-cols-2">
               <Saisie placeholder="Nom" value={nouvel.nom} onChange={(e) => setNouvel({ ...nouvel, nom: e.target.value })} />
               <Saisie placeholder="E-mail" type="email" value={nouvel.email} onChange={(e) => setNouvel({ ...nouvel, email: e.target.value })} />
             </div>
             <Saisie placeholder="Mot de passe provisoire (8 caractères min.)" type="password" value={nouvel.motDePasse} onChange={(e) => setNouvel({ ...nouvel, motDePasse: e.target.value })} autoComplete="new-password" />
-            <Bouton variante="secondaire" disabled={enCours || !nouvel.email || nouvel.motDePasse.length < 8} onClick={() => lancer(() => ajouterAdmin(nouvel.email, nouvel.nom, nouvel.motDePasse), (r) => r.ok && setNouvel({ email: "", nom: "", motDePasse: "" }))}>
+            <Bouton variante="secondaire" icone="plus" disabled={enCours || !nouvel.email || nouvel.motDePasse.length < 8} onClick={() => lancer(() => ajouterAdmin(nouvel.email, nouvel.nom, nouvel.motDePasse), (r) => r.ok && setNouvel({ email: "", nom: "", motDePasse: "" }))}>
               Ajouter
             </Bouton>
           </div>

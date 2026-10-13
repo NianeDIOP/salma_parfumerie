@@ -26,7 +26,7 @@ export function TableStocks({ produits, univers }: { produits: Produit[]; univer
 
   return (
     <>
-      <Carte titre="Ajuster les prix en masse" description="Augmentez ou baissez tous les prix d'un pourcentage (arrondi à 100 F).">
+      <Carte icone="tendance" titre="Ajuster les prix en masse" description="Augmentez ou baissez les prix d'un pourcentage (arrondi à 100 F)">
         <div className="flex flex-wrap items-end gap-3">
           <Champ label="Variation (%)" className="w-32">
             <SaisieNombre value={pourcent} onChange={setPourcent} step={1} />
@@ -36,6 +36,7 @@ export function TableStocks({ produits, univers }: { produits: Produit[]; univer
           </Champ>
           <Bouton
             variante="secondaire"
+            icone="check"
             disabled={!pourcent || enCours}
             onClick={() => confirm(`Appliquer ${pourcent > 0 ? "+" : ""}${pourcent} % aux prix ?`) && lancer(() => ajusterPrix(pourcent, { univers: filtreUnivers || undefined }), () => setPourcent(0))}
           >
@@ -44,22 +45,22 @@ export function TableStocks({ produits, univers }: { produits: Produit[]; univer
         </div>
       </Carte>
 
-      <div className="mb-3 mt-6 flex flex-wrap items-center gap-3">
+      <div className="mb-2.5 mt-4 flex flex-wrap items-center gap-3">
         <Saisie value={q} onChange={(e) => setQ(e.target.value)} placeholder="Rechercher…" className="max-w-sm" />
-        <label className="flex items-center gap-2 text-sm font-medium">
+        <label className="flex items-center gap-2 text-xs font-medium">
           <input type="checkbox" checked={seulementAlertes} onChange={(e) => setSeulementAlertes(e.target.checked)} className="size-4 accent-bissap" />
           Seulement les alertes
         </label>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-line bg-white">
-        <table className="w-full min-w-[640px] text-left text-sm">
-          <thead className="border-b border-line bg-creme-light text-muted">
+      <div className="overflow-x-auto rounded-xl border border-line bg-white">
+        <table className="w-full min-w-[600px] text-left text-[13px]">
+          <thead className="border-b border-line bg-creme-light text-[11px] text-muted">
             <tr>
-              <th className="px-4 py-3 font-semibold">Produit</th>
-              <th className="px-4 py-3 font-semibold">Contenance</th>
-              <th className="w-40 px-4 py-3 font-semibold">Prix (FCFA)</th>
-              <th className="w-32 px-4 py-3 font-semibold">Stock</th>
+              <th className="px-3 py-2 font-medium">Produit</th>
+              <th className="px-3 py-2 font-medium">Contenance</th>
+              <th className="w-36 px-3 py-2 font-medium">Prix (FCFA)</th>
+              <th className="w-28 px-3 py-2 font-medium">Stock</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
@@ -69,22 +70,22 @@ export function TableStocks({ produits, univers }: { produits: Produit[]; univer
               const alerte = stock <= (p.seuilAlerte ?? 5);
               return (
                 <tr key={cle} className={stock === 0 ? "bg-bissap/5" : alerte ? "bg-[#d9a521]/10" : ""}>
-                  <td className="px-4 py-2">
+                  <td className="px-3 py-1.5">
                     <span className="flex items-center gap-3">
-                      <span className="relative size-10 shrink-0 overflow-hidden rounded-lg" style={{ background: p.theme.bg }}>
+                      <span className="relative size-8 shrink-0 overflow-hidden rounded-md" style={{ background: p.theme.bg }}>
                         <Photo id={p.images[0] ?? ""} alt="" sizes="40px" />
                       </span>
                       <span>
-                        <span className="block font-semibold">{p.nom}</span>
-                        <span className="text-xs text-muted">{p.marque}</span>
+                        <span className="block font-medium">{p.nom}</span>
+                        <span className="text-[11px] text-muted">{p.marque}</span>
                       </span>
                     </span>
                   </td>
-                  <td className="px-4 py-2">{c.label}</td>
-                  <td className="px-4 py-2">
+                  <td className="px-3 py-1.5">{c.label}</td>
+                  <td className="px-3 py-1.5">
                     <SaisieNombre value={m.prix ?? c.prix} step={500} min={0} onChange={(n) => maj(cle, { prix: n })} className={m.prix !== undefined ? "border-bissap" : ""} />
                   </td>
-                  <td className="px-4 py-2">
+                  <td className="px-3 py-1.5">
                     <SaisieNombre value={stock} min={0} onChange={(n) => maj(cle, { stock: n })} className={m.stock !== undefined ? "border-bissap" : ""} />
                   </td>
                 </tr>
