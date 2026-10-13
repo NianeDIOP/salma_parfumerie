@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { deconnexion } from "@/lib/actions/admin";
 import { Icone, type NomIcone } from "./icones";
 
@@ -53,12 +53,12 @@ export function MenuAdmin({ admin, logo, compteurs }: { admin: { email: string; 
 
   const contenu = (
     <div className="flex h-full flex-col">
-      <Link href="/admin" className="flex h-14 items-center gap-2 border-b border-current/10 px-4">
+      <Link href="/admin" className="flex h-12 shrink-0 items-center gap-2 border-b border-current/10 px-4">
         <span className="grid size-7 place-items-center rounded-md bg-[var(--a-barre-actif)] text-sm font-extrabold text-[var(--a-barre-actif-texte)]">{logo.charAt(0).toUpperCase()}</span>
         <span className="text-[15px] font-bold tracking-tight">{logo}</span>
         <span className="rounded bg-current/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase opacity-70">Admin</span>
       </Link>
-      <nav className="flex-1 space-y-4 overflow-y-auto px-2.5 py-3">
+      <nav className="defil-discret flex-1 space-y-2.5 overflow-y-auto overscroll-contain px-2.5 py-3">
         {groupes.map((g) => (
           <div key={g.titre || "racine"}>
             {g.titre && <p className="px-2.5 pb-1 text-[11px] font-semibold opacity-55">{g.titre}</p>}
@@ -69,7 +69,7 @@ export function MenuAdmin({ admin, logo, compteurs }: { admin: { email: string; 
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className={`flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] transition ${actif(l.href) ? "bg-[var(--a-barre-actif)] font-medium text-[var(--a-barre-actif-texte)]" : "opacity-85 hover:bg-current/10 hover:opacity-100"}`}
+                      className={`flex h-[30px] items-center gap-2.5 rounded-md px-2.5 text-[13px] transition ${actif(l.href) ? "bg-[var(--a-barre-actif)] font-medium text-[var(--a-barre-actif-texte)]" : "opacity-85 hover:bg-current/10 hover:opacity-100"}`}
                     >
                       <Icone nom={l.icone} className="size-4 shrink-0" />
                       <span className="flex-1 truncate">{l.label}</span>
@@ -82,23 +82,6 @@ export function MenuAdmin({ admin, logo, compteurs }: { admin: { email: string; 
           </div>
         ))}
       </nav>
-      <div className="space-y-2 border-t border-current/10 p-2.5">
-        <a href="/" target="_blank" className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] opacity-85 hover:bg-current/10 hover:opacity-100">
-          <Icone nom="externe" className="size-4" /> Voir le site
-        </a>
-        <div className="flex items-center gap-2 rounded-lg bg-current/5 p-2">
-          <span className="grid size-7 shrink-0 place-items-center rounded-md bg-[var(--a-barre-actif)] text-[11px] font-bold text-[var(--a-barre-actif-texte)]">{admin.nom.slice(0, 2).toUpperCase()}</span>
-          <span className="min-w-0 flex-1">
-            <span className="block truncate text-xs font-semibold">{admin.nom}</span>
-            <span className="block truncate text-[11px] opacity-60">{admin.email}</span>
-          </span>
-          <form action={deconnexion}>
-            <button className="grid size-7 place-items-center rounded-md opacity-60 hover:bg-current/10 hover:opacity-100" title="Se déconnecter" aria-label="Se déconnecter">
-              <Icone nom="sortie" className="size-4" />
-            </button>
-          </form>
-        </div>
-      </div>
     </div>
   );
 
@@ -106,21 +89,82 @@ export function MenuAdmin({ admin, logo, compteurs }: { admin: { email: string; 
     <>
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-56 border-r border-line bg-[var(--a-barre)] text-[var(--a-barre-texte)] lg:block">{contenu}</aside>
 
-      {/* Mobile */}
-      <header className="fixed inset-x-0 top-0 z-40 flex h-12 items-center gap-2 border-b border-line bg-white/95 px-2 pt-[env(safe-area-inset-top)] backdrop-blur lg:hidden">
-        <button onClick={() => setOuvert(true)} className="grid size-9 place-items-center rounded-md hover:bg-ink/5" aria-label="Menu">
+      {/* Barre du haut (mobile et ordinateur) */}
+      <header className="fixed inset-x-0 top-0 z-40 flex h-12 items-center gap-1.5 border-b border-line bg-white/95 px-2 pt-[env(safe-area-inset-top)] backdrop-blur md:px-4 lg:left-56">
+        <button onClick={() => setOuvert(true)} className="grid size-9 place-items-center rounded-md hover:bg-ink/5 lg:hidden" aria-label="Menu">
           <Icone nom="menu" className="size-5" />
         </button>
-        <span className="text-[15px] font-bold tracking-tight">{logo}</span>
-        <span className="rounded bg-ink/5 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted">Admin</span>
+        <Link href="/admin" className="text-[15px] font-bold tracking-tight lg:hidden">
+          {logo}
+        </Link>
+        <span className="ml-auto" />
         {compteurs.commandes > 0 && (
-          <Link href="/admin/commandes" className="ml-auto flex h-7 items-center gap-1.5 rounded-md bg-bissap px-2.5 text-xs font-semibold text-white">
-            <Icone nom="commandes" className="size-3.5" /> {compteurs.commandes} à traiter
+          <Link href="/admin/commandes" className="flex h-7 items-center gap-1.5 rounded-md bg-bissap px-2.5 text-xs font-semibold text-white" title="Commandes à traiter">
+            <Icone nom="commandes" className="size-3.5" /> {compteurs.commandes}
+            <span className="hidden sm:inline">à traiter</span>
           </Link>
         )}
+        {compteurs.stocks > 0 && (
+          <Link href="/admin/stocks" className="hidden h-7 items-center gap-1.5 rounded-md bg-[#d9a521]/15 px-2.5 text-xs font-semibold text-[#a07a10] sm:flex" title="Alertes stock">
+            <Icone nom="alerte" className="size-3.5" /> {compteurs.stocks}
+          </Link>
+        )}
+        <a href="/" target="_blank" className="grid size-8 place-items-center rounded-md text-muted hover:bg-ink/5 hover:text-ink" title="Voir le site" aria-label="Voir le site">
+          <Icone nom="externe" className="size-4" />
+        </a>
+        <MenuCompte admin={admin} />
       </header>
+
       <div className={`fixed inset-0 z-50 bg-ink/40 transition-opacity lg:hidden ${ouvert ? "opacity-100" : "pointer-events-none opacity-0"}`} onClick={() => setOuvert(false)} />
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-[var(--a-barre)] text-[var(--a-barre-texte)] shadow-2xl transition-transform duration-300 lg:hidden ${ouvert ? "translate-x-0" : "-translate-x-full"}`}>{contenu}</aside>
     </>
+  );
+}
+
+function MenuCompte({ admin }: { admin: { email: string; nom: string } }) {
+  const [ouvert, setOuvert] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fermer après navigation
+  useEffect(() => setOuvert(false), [pathname]);
+  useEffect(() => {
+    if (!ouvert) return;
+    const fermer = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && setOuvert(false);
+    const echap = (e: KeyboardEvent) => e.key === "Escape" && setOuvert(false);
+    document.addEventListener("mousedown", fermer);
+    document.addEventListener("keydown", echap);
+    return () => {
+      document.removeEventListener("mousedown", fermer);
+      document.removeEventListener("keydown", echap);
+    };
+  }, [ouvert]);
+
+  return (
+    <div ref={ref} className="relative">
+      <button onClick={() => setOuvert((o) => !o)} className="flex h-8 items-center gap-1.5 rounded-md pl-1 pr-1.5 hover:bg-ink/5" aria-label="Mon compte" aria-expanded={ouvert}>
+        <span className="grid size-6 place-items-center rounded-md bg-[var(--a-bouton)] text-[10px] font-bold text-[var(--a-bouton-texte)]">{admin.nom.slice(0, 2).toUpperCase()}</span>
+        <span className="hidden max-w-32 truncate text-xs font-medium md:block">{admin.nom}</span>
+        <Icone nom="bas" className="size-3.5 text-muted" />
+      </button>
+      {ouvert && (
+        <div className="absolute right-0 top-full mt-1.5 w-56 overflow-hidden rounded-lg border border-line bg-white py-1 text-[13px] shadow-xl">
+          <div className="border-b border-line px-3 py-2">
+            <p className="truncate text-xs font-semibold">{admin.nom}</p>
+            <p className="truncate text-[11px] text-muted">{admin.email}</p>
+          </div>
+          <Link href="/admin/parametres#securite" className="flex h-8 items-center gap-2 px-3 hover:bg-creme">
+            <Icone nom="cadenas" className="size-4 text-muted" /> Mot de passe
+          </Link>
+          <Link href="/admin/theme" className="flex h-8 items-center gap-2 px-3 hover:bg-creme">
+            <Icone nom="couleur" className="size-4 text-muted" /> Thème de l&apos;admin
+          </Link>
+          <form action={deconnexion} className="border-t border-line pt-1">
+            <button className="flex h-8 w-full items-center gap-2 px-3 text-bissap hover:bg-creme" aria-label="Se déconnecter">
+              <Icone nom="sortie" className="size-4" /> Se déconnecter
+            </button>
+          </form>
+        </div>
+      )}
+    </div>
   );
 }

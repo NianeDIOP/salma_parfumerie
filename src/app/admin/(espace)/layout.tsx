@@ -16,7 +16,7 @@ export default async function EspaceAdmin({ children }: LayoutProps<"/admin">) {
   return (
     <div className="text-[13px] lg:pl-56">
       <MenuAdmin admin={admin} logo={base.reglages.identite.logo} compteurs={{ commandes: enAttente, stocks: alertes }} />
-      <main className="mx-auto max-w-6xl px-4 pb-20 pt-16 md:px-6 lg:pt-6">
+      <main className="mx-auto max-w-6xl px-4 pb-20 pt-16 md:px-6 lg:pt-[72px]">
         {motDePasseParDefaut && (
           <Link href="/admin/parametres#securite" className="mb-4 flex items-center gap-2 rounded-lg border border-[#d9a521]/40 bg-[#d9a521]/10 px-3 py-2 text-xs font-medium text-[#7a5c0c]">
             <Icone nom="alerte" className="size-4 shrink-0" />
