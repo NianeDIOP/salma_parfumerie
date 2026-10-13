@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { formatFCFA, getProduit, LIVRAISON_OFFERTE_DES } from "@/lib/catalogue";
-import { Bottle } from "./bottle";
+import { Photo } from "./photo";
 import { prixLigne, useCart } from "./cart";
 import { CloseIcon } from "./icons";
 
@@ -82,8 +82,8 @@ export function CartDrawer() {
               if (!p) return null;
               return (
                 <li key={`${l.slug}-${l.contenance}`} className="flex gap-4 py-4">
-                  <div className="grid size-20 shrink-0 place-items-center" style={{ background: p.visuel.fond }}>
-                    <Bottle {...p.visuel} className="h-16" label={false} shadow={false} />
+                  <div className="relative size-20 shrink-0 overflow-hidden" style={{ background: p.theme.bg }}>
+                    <Photo id={p.images[0]} alt="" sizes="80px" />
                   </div>
                   <div className="flex flex-1 flex-col">
                     <div className="flex justify-between gap-2">

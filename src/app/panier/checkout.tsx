@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Bottle } from "@/components/bottle";
+import { Photo } from "@/components/photo";
 import { prixLigne, useCart } from "@/components/cart";
 import { CheckIcon } from "@/components/icons";
 import { formatFCFA, getProduit, LIVRAISON_OFFERTE_DES, produits } from "@/lib/catalogue";
@@ -98,8 +98,8 @@ export function Checkout() {
                 const p = getProduit(l.slug)!;
                 return (
                   <li key={`${l.slug}-${l.contenance}`} className="flex items-center gap-4 py-4">
-                    <div className="grid size-20 place-items-center" style={{ background: p.visuel.fond }}>
-                      <Bottle {...p.visuel} className="h-16" label={false} shadow={false} />
+                    <div className="relative size-20 shrink-0 overflow-hidden" style={{ background: p.theme.bg }}>
+                      <Photo id={p.images[0]} alt="" sizes="80px" />
                     </div>
                     <div className="flex-1">
                       <p className="font-bold">{p.nom}</p>
@@ -128,7 +128,9 @@ export function Checkout() {
                   onClick={() => setEchantillon(p.slug)}
                   className={`p-3 text-center text-xs transition ${echantillon === p.slug ? "bg-white ring-2 ring-ink" : "bg-creme-light ring-1 ring-line"}`}
                 >
-                  <Bottle {...p.visuel} forme="fin" className="mx-auto h-14" label={false} shadow={false} />
+                  <span className="relative mx-auto block size-16 overflow-hidden rounded-full" style={{ background: p.theme.bg }}>
+                    <Photo id={p.images[0]} alt="" sizes="64px" />
+                  </span>
                   <span className="mt-2 block font-semibold">{p.nom}</span>
                 </button>
               ))}

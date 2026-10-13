@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { formatFCFA, prixMin } from "@/lib/catalogue";
 import { rechercher, suggestions } from "@/lib/search";
-import { Bottle } from "./bottle";
+import { Photo } from "./photo";
 import { CloseIcon, SearchIcon } from "./icons";
 
 export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -78,14 +78,16 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
                     onClick={onClose}
                     className="flex items-center gap-4 bg-creme-light p-3 transition hover:bg-white"
                   >
-                    <div className="grid size-16 shrink-0 place-items-center" style={{ background: p.visuel.fond }}>
-                      <Bottle {...p.visuel} className="h-14" label={false} shadow={false} />
+                    <div className="relative size-16 shrink-0 overflow-hidden" style={{ background: p.theme.bg }}>
+                      <Photo id={p.images[0]} alt="" sizes="64px" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs text-muted">
                         {p.type} · {p.famille}
                       </p>
-                      <p className="font-bold">{p.nom}</p>
+                      <p className="font-bold">
+                        {p.marque} {p.nom}
+                      </p>
                       <p className="font-mono text-xs">dès {formatFCFA(prixMin(p))} FCFA</p>
                     </div>
                   </Link>

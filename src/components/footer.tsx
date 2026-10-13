@@ -5,7 +5,7 @@ const paiements = ["Wave", "Orange Money", "Free Money", "Visa", "Mastercard", "
 
 export function Footer() {
   return (
-    <footer className="mt-24 bg-ink text-white">
+    <footer className="mt-32 overflow-hidden bg-ink text-white">
       <div className="mx-auto max-w-7xl px-4 py-16 md:px-8">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
@@ -68,7 +68,14 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-6 border-t border-white/10 pt-8 md:flex-row md:items-center md:justify-between">
+        <p
+          className="mt-20 select-none bg-gradient-to-b from-white/90 to-white/5 bg-clip-text text-center text-[27vw] font-extrabold leading-[0.8] tracking-tighter text-transparent md:text-[22vw]"
+          aria-hidden
+        >
+          salma
+        </p>
+
+        <div className="mt-10 flex flex-col gap-6 border-t border-white/10 pt-8 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap gap-2">
             {paiements.map((p) => (
               <span key={p} className="border border-white/20 px-3 py-1 font-mono text-[11px] text-white/70">

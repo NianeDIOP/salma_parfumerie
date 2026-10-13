@@ -28,7 +28,7 @@ function motCorrespond(mot: string, index: string[]) {
 }
 
 function indexer(p: Produit) {
-  const texte = [p.nom, p.type, p.famille, p.genre, ...p.pyramide.tete, ...p.pyramide.coeur, ...p.pyramide.fond, ...p.tags].join(" ");
+  const texte = [p.nom, p.marque, p.type, p.famille, p.genre, ...p.pyramide.tete, ...p.pyramide.coeur, ...p.pyramide.fond, ...p.tags].join(" ");
   return normaliser(texte).split(/\s+/).filter(Boolean);
 }
 
@@ -43,4 +43,4 @@ export function rechercher(requete: string): Produit[] {
     .map((e) => e.produit);
 }
 
-export const suggestions = ["Oud", "Rose", "Jasmin", "Vanille", "Ambre", "Musc", "Encens"];
+export const suggestions = ["Chanel", "Oud", "Rose", "Vanille", "Ambre", "Musc", "Encens", "Versace"];

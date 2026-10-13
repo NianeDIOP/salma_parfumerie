@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Bottle } from "@/components/bottle";
 import { CheckIcon, CloseIcon } from "@/components/icons";
 import { ProductCard } from "@/components/product-card";
 import { prixMin, produits, type Famille, type Produit } from "@/lib/catalogue";
@@ -221,9 +220,7 @@ export function Quiz() {
                 className={`group relative bg-white p-2 text-left transition ${actif ? "ring-2 ring-ink" : "ring-1 ring-line hover:ring-ink"}`}
               >
                 <div className="relative aspect-[16/10] overflow-hidden" style={{ background: o.couleur }}>
-                  <div className="absolute -bottom-6 right-2 h-24 opacity-30 transition-transform duration-500 group-hover:-translate-y-3">
-                    <Bottle forme="fin" verre="#ffffff" bouchon="#ffffff" label={false} shadow={false} className="h-full w-auto" />
-                  </div>
+                  <div className="absolute -bottom-8 -right-8 size-28 rounded-full bg-white/25 transition-transform duration-700 group-hover:scale-150" />
                 </div>
                 {actif && (
                   <span className="absolute right-4 top-4 grid size-6 place-items-center rounded-full bg-ink text-white">

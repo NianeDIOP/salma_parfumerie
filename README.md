@@ -50,7 +50,9 @@ Options : `SYNC_INTERVAL=10 npm run dev:sync` (vérifie toutes les 10 s), `PORT=
 
 - **Next.js 16** (App Router, rendu serveur et statique), **React 19**, **TypeScript**
 - **Tailwind CSS 4**, design system SALMA dans `src/app/globals.css` (rouge bissap, bleu nuit, rose poudré, crème)
-- Données de démonstration dans `src/lib/catalogue.ts` (remplacées plus tard par l'API e-commerce)
+- **Motion** (animations, transitions de pages, scroll) et **Lenis** (défilement fluide)
+- Catalogue de démonstration dans `src/lib/catalogue.ts` : chaque produit a ses photos et sa couleur de thème (`theme`), qui pilote les fonds et transitions
+- Photos : [Unsplash](https://unsplash.com/license) (licence libre, usage commercial autorisé), chargées depuis leur CDN. Les prix, stocks et la sélection de marques sont indicatifs : à remplacer par le catalogue réel de SALMA et ses packshots officiels
 
 ```
 src/
@@ -60,14 +62,15 @@ src/
 │   ├── [univers]/[slug]/        Fiche produit (maquette 3)
 │   ├── quiz/                    Quiz « Ma Signature »
 │   └── panier/                  Panier → livraison → paiement → confirmation (maquette 4)
-├── components/                  Flacons SVG, panier, recherche, en-tête…
+├── components/                  Hero, motion design, cartes produit, panier, recherche…
 └── lib/                         Catalogue, recherche tolérante aux fautes
 ```
 
 ## Feuille de route (formule Prestige)
 
 - [x] Fondations : design system, accueil, catalogue, fiche produit, recherche, panier, quiz, tunnel de commande (paiement simulé)
-- [ ] Flacons 3D (Three.js / React Three Fiber), storytelling au défilement (GSAP), transitions de pages
+- [x] Motion design : hero cinématique, fonds adaptés à chaque parfum, défilement fluide, univers en scroll horizontal, voyage olfactif, transitions de pages, curseur signature
+- [ ] Flacons 3D (Three.js / React Three Fiber)
 - [ ] Back-office : tableau de bord, commandes, paiements, stocks, clients, livraisons (maquette 5)
 - [ ] Base de données PostgreSQL + API e-commerce
 - [ ] Paiements réels : agrégateur Mobile Money (Wave, Orange Money, Free Money) + cartes

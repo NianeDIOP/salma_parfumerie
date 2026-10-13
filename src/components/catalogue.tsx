@@ -167,11 +167,9 @@ export function Catalogue({ produits }: { produits: Produit[] }) {
         {resultats.length === 0 ? (
           <p className="py-20 text-center text-muted">Aucun produit ne correspond à ces filtres.</p>
         ) : (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 xl:grid-cols-3">
-            {resultats.map((p) => (
-              <div key={p.slug} className="animate-fade-up">
-                <ProductCard produit={p} />
-              </div>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:gap-x-6 xl:grid-cols-3">
+            {resultats.map((p, i) => (
+              <ProductCard key={p.slug} produit={p} index={i} />
             ))}
           </div>
         )}

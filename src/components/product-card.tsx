@@ -1,59 +1,85 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "motion/react";
 import { formatFCFA, prixMin, type Produit } from "@/lib/catalogue";
-import { Bottle } from "./bottle";
 import { useCart } from "./cart";
-import { BagIcon, HeartIcon, StarIcon } from "./icons";
+import { HeartIcon, StarIcon } from "./icons";
+import { Photo } from "./photo";
 
-export function ProductCard({ produit: p }: { produit: Produit }) {
+export function ProductCard({ produit: p, index = 0 }: { produit: Produit; index?: number }) {
   const { add } = useCart();
   const premiere = p.contenances.find((c) => c.stock > 0) ?? p.contenances[0];
+  const encre = p.theme.dark ? "#fff" : "#1a1a1a";
 
   return (
-    <article className="group flex flex-col">
-      <Link
-        href={`/${p.univers}/${p.slug}`}
-        className="relative block aspect-[4/5] overflow-hidden"
-        style={{ background: p.visuel.fond }}
-      >
+    <motion.article
+      className="group flex flex-col"
+      initial={{ opacity: 0, y: 60 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-8%" }}
+      transition={{ duration: 0.9, delay: (index % 4) * 0.08, ease: [0.2, 0.7, 0.1, 1] }}
+    >
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[2px]" style={{ background: p.theme.bg }} data-cursor="voir">
+        <Link href={`/${p.univers}/${p.slug}`} className="absolute inset-0" aria-label={`${p.marque} ${p.nom}`}>
+          <div className="absolute inset-0 transition-transform duration-[1.4s] ease-[cubic-bezier(.2,.7,.1,1)] group-hover:scale-110">
+            <Photo id={p.images[0]} alt={`${p.marque} ${p.nom}`} sizes="(max-width: 768px) 50vw, 25vw" />
+          </div>
+          {p.images[1] && (
+            <div className="absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100">
+              <Photo id={p.images[1]} alt="" sizes="(max-width: 768px) 50vw, 25vw" />
+            </div>
+          )}
+          <div
+            className="absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+            style={{ background: `linear-gradient(to top, ${p.theme.bg}ee 0%, transparent 45%)` }}
+          />
+        </Link>
+
         {p.badge && (
-          <span className="absolute left-3 top-3 z-10 bg-white px-2 py-1 text-[11px] font-semibold text-bissap">
+          <span
+            className="absolute left-3 top-3 z-10 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider backdrop-blur-md"
+            style={{ background: p.theme.bg + "cc", color: encre }}
+          >
             {p.badge}
           </span>
         )}
-        <span className="absolute right-3 top-3 z-10 grid size-8 place-items-center rounded-full bg-white/70 opacity-0 transition group-hover:opacity-100">
+        <button
+          className="absolute right-3 top-3 z-10 grid size-9 place-items-center rounded-full bg-white/80 text-ink opacity-0 backdrop-blur transition duration-500 hover:scale-110 group-hover:opacity-100"
+          aria-label="Ajouter aux favoris"
+        >
           <HeartIcon className="size-4" />
-        </span>
-        <div className="absolute inset-0 grid place-items-center p-8 transition-transform duration-700 ease-out group-hover:-translate-y-3 group-hover:rotate-[-4deg] group-hover:scale-105">
-          <Bottle {...p.visuel} className="h-full max-h-56 w-auto drop-shadow-xl" />
-        </div>
-      </Link>
+        </button>
 
-      <div className="mt-3 flex items-start justify-between gap-2">
-        <div>
-          <p className="text-[11px] text-muted">
-            {p.type} · {p.famille}
-          </p>
-          <Link href={`/${p.univers}/${p.slug}`} className="font-bold leading-tight hover:text-bissap">
+        {/* Ajout rapide qui glisse depuis le bas */}
+        <button
+          onClick={() => add(p.slug, premiere.label)}
+          className="absolute inset-x-3 bottom-3 z-10 translate-y-[140%] rounded-full py-3 text-sm font-semibold transition-transform duration-500 ease-[cubic-bezier(.2,.7,.1,1)] group-hover:translate-y-0 max-md:translate-y-0 max-md:py-2 max-md:text-xs"
+          style={{ background: encre, color: p.theme.bg }}
+        >
+          Ajouter · {premiere.label}
+        </button>
+      </div>
+
+      <div className="mt-4 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">{p.marque}</p>
+          <Link href={`/${p.univers}/${p.slug}`} className="mt-1 block text-lg font-bold leading-tight tracking-tight hover:text-bissap">
             {p.nom}
           </Link>
+          <p className="text-xs text-muted">
+            {p.type} · {p.famille}
+          </p>
         </div>
-        <span className="flex items-center gap-0.5 text-[11px] text-ink">
-          <StarIcon className="size-3 text-bissap" />
-          {p.note}
-        </span>
+        <div className="shrink-0 text-right">
+          <p className="font-mono text-sm">
+            {formatFCFA(prixMin(p))} <span className="text-[10px] text-muted">F</span>
+          </p>
+          <p className="mt-1 flex items-center justify-end gap-0.5 text-[11px]">
+            <StarIcon className="size-3 text-bissap" /> {p.note}
+          </p>
+        </div>
       </div>
-      <p className="mt-1 font-mono text-sm">
-        {p.contenances.length > 1 && <span className="text-muted">dès </span>}
-        {formatFCFA(prixMin(p))} <span className="text-[10px] text-muted">FCFA</span>
-      </p>
-      <button
-        onClick={() => add(p.slug, premiere.label)}
-        className="mt-3 flex items-center justify-center gap-2 bg-ink py-2.5 text-sm text-white transition hover:bg-bissap"
-      >
-        <BagIcon className="size-4" /> Ajouter
-      </button>
-    </article>
+    </motion.article>
   );
 }

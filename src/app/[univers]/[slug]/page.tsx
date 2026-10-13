@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Bottle } from "@/components/bottle";
 import { StarIcon } from "@/components/icons";
-import { ProductBuy } from "@/components/product-buy";
 import { ProductCard } from "@/components/product-card";
+import { ProductHero } from "@/components/product-hero";
 import { Jauge, Pyramid } from "@/components/pyramid";
 import { Reveal } from "@/components/reveal";
 import { getProduit, getUnivers, produits, produitsAssocies } from "@/lib/catalogue";
@@ -38,50 +36,7 @@ export default async function ProduitPage({ params }: PageProps<"/[univers]/[slu
 
   return (
     <>
-      <section className="mx-auto grid max-w-7xl gap-10 px-4 py-8 md:px-8 lg:grid-cols-[80px_1fr_1fr]">
-        <div className="hidden flex-col gap-3 lg:flex">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className={`grid aspect-square place-items-center ${i === 0 ? "ring-1 ring-ink" : ""}`}
-              style={{ background: i === 1 ? "#ece6df" : p.visuel.fond }}
-            >
-              <Bottle {...p.visuel} className="h-14" label={i === 0} shadow={false} />
-            </div>
-          ))}
-        </div>
-
-        <div className="relative grid aspect-square place-items-center overflow-hidden" style={{ background: p.visuel.fond }}>
-          <span className="absolute left-4 top-4 bg-white px-2 py-1 font-mono text-[11px]">360°</span>
-          <div className="animate-float">
-            <Bottle {...p.visuel} className="h-[340px] w-auto drop-shadow-2xl md:h-[420px]" />
-          </div>
-        </div>
-
-        <div>
-          <p className="text-xs text-muted">
-            <Link href={`/${u.slug}`} className="hover:text-ink">
-              {u.nom}
-            </Link>{" "}
-            › {p.famille}
-          </p>
-          {p.badge && <p className="mt-3 text-xs font-semibold text-bissap">{p.badge}</p>}
-          <h1 className="mt-1 text-4xl font-extrabold tracking-tight md:text-5xl">{p.nom}</h1>
-          <p className="mt-1 text-muted">
-            {p.type}, {p.famille.toLowerCase()}
-          </p>
-          <p className="mt-2 flex items-center gap-1 text-sm">
-            {Array.from({ length: 5 }, (_, i) => (
-              <StarIcon key={i} className={`size-3.5 ${i < Math.round(p.note) ? "text-ink" : "text-line"}`} />
-            ))}
-            <span className="ml-1 text-muted">
-              {p.note} · {p.avis} avis vérifiés
-            </span>
-          </p>
-          <p className="mt-5 max-w-lg leading-relaxed">{p.description}</p>
-          <ProductBuy produit={p} />
-        </div>
-      </section>
+      <ProductHero produit={p} univers={u} />
 
       <section className="border-t border-line bg-creme-light">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 md:px-8 lg:grid-cols-[1fr_1fr_1fr]">
@@ -136,13 +91,11 @@ export default async function ProduitPage({ params }: PageProps<"/[univers]/[slu
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 pt-16 md:px-8">
-        <h2 className="mb-8 text-3xl font-extrabold tracking-tight">Vous aimerez aussi</h2>
+      <section className="mx-auto max-w-7xl px-4 pt-24 md:px-8">
+        <h2 className="mb-10 text-4xl font-extrabold tracking-tighter md:text-6xl">Vous aimerez aussi</h2>
         <div className="grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4">
           {produitsAssocies(p).map((x, i) => (
-            <Reveal key={x.slug} delay={i * 80}>
-              <ProductCard produit={x} />
-            </Reveal>
+            <ProductCard key={x.slug} produit={x} index={i} />
           ))}
         </div>
       </section>

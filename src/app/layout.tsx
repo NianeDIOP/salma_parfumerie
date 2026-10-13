@@ -4,6 +4,8 @@ import { CartProvider } from "@/components/cart";
 import { CartDrawer } from "@/components/cart-drawer";
 import { Footer } from "@/components/footer";
 import { AnnouncementBar, Header } from "@/components/header";
+import { Cursor } from "@/components/motion/cursor";
+import { MotionProviders } from "@/components/motion/providers";
 import "./globals.css";
 
 const grotesk = Schibsted_Grotesk({
@@ -33,13 +35,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fr" className={`${grotesk.variable} ${code.variable} antialiased`}>
       <body className="flex min-h-screen flex-col">
-        <CartProvider>
-          <AnnouncementBar />
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <CartDrawer />
-        </CartProvider>
+        <MotionProviders>
+          <CartProvider>
+            <AnnouncementBar />
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <CartDrawer />
+            <Cursor />
+          </CartProvider>
+        </MotionProviders>
       </body>
     </html>
   );
