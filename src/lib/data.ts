@@ -4,7 +4,8 @@ import type { DonneesSite } from "./site";
 
 export async function donneesSite(): Promise<DonneesSite> {
   const base = await lireBase();
-  const { pages, ...reste } = base.reglages;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- le thème admin reste privé
+  const { pages, admin, ...reste } = base.reglages;
   return {
     reglages: { ...reste, pages: pages.map(({ slug, titre, publie }) => ({ slug, titre, publie })) },
     produits: base.produits.filter((p) => p.publie !== false),

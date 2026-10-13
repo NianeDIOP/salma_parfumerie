@@ -249,12 +249,14 @@ export interface Reglages {
   paiements: Record<MoyenPaiement, boolean>;
   seo: { titre: string; description: string };
   boutique: { texteVide: string; messageConfirmation: string; paiementEnPlusieursFois: boolean };
+  /** thème de l'espace d'administration */
+  admin: { theme: string; perso: Partial<import("./admin-themes").ThemeAdmin> };
 }
 
 // ---------- Données exposées au site public ----------
 
 export interface DonneesSite {
-  reglages: Omit<Reglages, "pages"> & { pages: Pick<PageLibre, "slug" | "titre" | "publie">[] };
+  reglages: Omit<Reglages, "pages" | "admin"> & { pages: Pick<PageLibre, "slug" | "titre" | "publie">[] };
   produits: Produit[];
   univers: Univers[];
 }

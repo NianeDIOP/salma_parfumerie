@@ -58,6 +58,7 @@ Ouvrez **http://localhost:3000/admin**.
 | Apparence | Logo, couleurs du site, police, effets, menu de l'en-tête, pied de page, libellés de la barre mobile |
 | Pages | Livraison, FAQ, contact, CGV et toute nouvelle page (`/pages/…`) |
 | Livraison & paiement | Zones, délais, frais, livraison offerte, moyens de paiement, échantillon offert |
+| Thème de l'admin | 8 modèles (Salma Crème, Nuit, Ardoise, Bissap, Émeraude, Luxe doré, Minimal, Lavande) avec aperçu en direct, puis couleurs, arrondis et police personnalisables |
 | Paramètres | Coordonnées, WhatsApp, référencement Google, administrateurs, mot de passe |
 
 ### Données

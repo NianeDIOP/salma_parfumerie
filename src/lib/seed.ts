@@ -187,6 +187,7 @@ export const reglagesParDefaut: Reglages = {
     messageConfirmation: "Un message WhatsApp de confirmation vous a été envoyé.",
     paiementEnPlusieursFois: true,
   },
+  admin: { theme: "salma", perso: {} },
 };
 
 export const produitsParDefaut = seedProduits.map((p) => ({ ...p, publie: true, seuilAlerte: 5 }));

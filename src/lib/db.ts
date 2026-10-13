@@ -61,6 +61,7 @@ function completer(base: Base): Base {
     paiements: { ...d.paiements, ...r.paiements },
     seo: { ...d.seo, ...r.seo },
     boutique: { ...d.boutique, ...r.boutique },
+    admin: { ...d.admin, ...r.admin },
   } as Reglages;
   base.codes ??= [];
   base.commandes ??= [];

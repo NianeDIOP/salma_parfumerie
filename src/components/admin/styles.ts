@@ -2,7 +2,7 @@
 export type Variante = "principal" | "secondaire" | "danger" | "discret";
 
 export const stylesBouton: Record<Variante, string> = {
-  principal: "bg-ink text-white hover:bg-ink/85",
+  principal: "bg-[var(--a-bouton)] text-[var(--a-bouton-texte)] hover:opacity-90",
   secondaire: "border border-line bg-white hover:bg-creme-light hover:border-ink/30",
   danger: "border border-[#c0392b]/25 bg-white text-[#c0392b] hover:bg-[#c0392b] hover:text-white",
   discret: "text-ink/70 hover:bg-ink/5 hover:text-ink",

@@ -34,7 +34,13 @@ const groupes: { titre: string; liens: { href: string; label: string; icone: Nom
       { href: "/admin/livraison", label: "Livraison & paiement", icone: "livraison" },
     ],
   },
-  { titre: "Réglages", liens: [{ href: "/admin/parametres", label: "Paramètres", icone: "parametres" }] },
+  {
+    titre: "Réglages",
+    liens: [
+      { href: "/admin/theme", label: "Thème de l'admin", icone: "couleur" },
+      { href: "/admin/parametres", label: "Paramètres", icone: "parametres" },
+    ],
+  },
 ];
 
 export function MenuAdmin({ admin, logo, compteurs }: { admin: { email: string; nom: string }; logo: string; compteurs: { commandes: number; stocks: number } }) {
@@ -47,15 +53,15 @@ export function MenuAdmin({ admin, logo, compteurs }: { admin: { email: string; 
 
   const contenu = (
     <div className="flex h-full flex-col">
-      <Link href="/admin" className="flex h-14 items-center gap-2 border-b border-line px-4">
-        <span className="grid size-7 place-items-center rounded-md bg-bissap text-sm font-extrabold text-white">{logo.charAt(0).toUpperCase()}</span>
+      <Link href="/admin" className="flex h-14 items-center gap-2 border-b border-current/10 px-4">
+        <span className="grid size-7 place-items-center rounded-md bg-[var(--a-barre-actif)] text-sm font-extrabold text-[var(--a-barre-actif-texte)]">{logo.charAt(0).toUpperCase()}</span>
         <span className="text-[15px] font-bold tracking-tight">{logo}</span>
-        <span className="rounded bg-ink/5 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted">Admin</span>
+        <span className="rounded bg-current/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase opacity-70">Admin</span>
       </Link>
       <nav className="flex-1 space-y-4 overflow-y-auto px-2.5 py-3">
         {groupes.map((g) => (
           <div key={g.titre || "racine"}>
-            {g.titre && <p className="px-2.5 pb-1 text-[11px] font-semibold text-muted">{g.titre}</p>}
+            {g.titre && <p className="px-2.5 pb-1 text-[11px] font-semibold opacity-55">{g.titre}</p>}
             <ul className="space-y-px">
               {g.liens.map((l) => {
                 const n = l.compteur ? compteurs[l.compteur] : 0;
@@ -63,7 +69,7 @@ export function MenuAdmin({ admin, logo, compteurs }: { admin: { email: string; 
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className={`flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] transition ${actif(l.href) ? "bg-ink font-medium text-white" : "text-ink/80 hover:bg-ink/5 hover:text-ink"}`}
+                      className={`flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] transition ${actif(l.href) ? "bg-[var(--a-barre-actif)] font-medium text-[var(--a-barre-actif-texte)]" : "opacity-85 hover:bg-current/10 hover:opacity-100"}`}
                     >
                       <Icone nom={l.icone} className="size-4 shrink-0" />
                       <span className="flex-1 truncate">{l.label}</span>
@@ -76,18 +82,18 @@ export function MenuAdmin({ admin, logo, compteurs }: { admin: { email: string; 
           </div>
         ))}
       </nav>
-      <div className="space-y-2 border-t border-line p-2.5">
-        <a href="/" target="_blank" className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] text-ink/80 hover:bg-ink/5 hover:text-ink">
+      <div className="space-y-2 border-t border-current/10 p-2.5">
+        <a href="/" target="_blank" className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] opacity-85 hover:bg-current/10 hover:opacity-100">
           <Icone nom="externe" className="size-4" /> Voir le site
         </a>
-        <div className="flex items-center gap-2 rounded-lg bg-creme-light p-2">
-          <span className="grid size-7 shrink-0 place-items-center rounded-md bg-nuit text-[11px] font-bold text-white">{admin.nom.slice(0, 2).toUpperCase()}</span>
+        <div className="flex items-center gap-2 rounded-lg bg-current/5 p-2">
+          <span className="grid size-7 shrink-0 place-items-center rounded-md bg-[var(--a-barre-actif)] text-[11px] font-bold text-[var(--a-barre-actif-texte)]">{admin.nom.slice(0, 2).toUpperCase()}</span>
           <span className="min-w-0 flex-1">
             <span className="block truncate text-xs font-semibold">{admin.nom}</span>
-            <span className="block truncate text-[11px] text-muted">{admin.email}</span>
+            <span className="block truncate text-[11px] opacity-60">{admin.email}</span>
           </span>
           <form action={deconnexion}>
-            <button className="grid size-7 place-items-center rounded-md text-muted hover:bg-line hover:text-ink" title="Se déconnecter" aria-label="Se déconnecter">
+            <button className="grid size-7 place-items-center rounded-md opacity-60 hover:bg-current/10 hover:opacity-100" title="Se déconnecter" aria-label="Se déconnecter">
               <Icone nom="sortie" className="size-4" />
             </button>
           </form>
@@ -98,7 +104,7 @@ export function MenuAdmin({ admin, logo, compteurs }: { admin: { email: string; 
 
   return (
     <>
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-56 border-r border-line bg-white lg:block">{contenu}</aside>
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-56 border-r border-line bg-[var(--a-barre)] text-[var(--a-barre-texte)] lg:block">{contenu}</aside>
 
       {/* Mobile */}
       <header className="fixed inset-x-0 top-0 z-40 flex h-12 items-center gap-2 border-b border-line bg-white/95 px-2 pt-[env(safe-area-inset-top)] backdrop-blur lg:hidden">
@@ -114,7 +120,7 @@ export function MenuAdmin({ admin, logo, compteurs }: { admin: { email: string; 
         )}
       </header>
       <div className={`fixed inset-0 z-50 bg-ink/40 transition-opacity lg:hidden ${ouvert ? "opacity-100" : "pointer-events-none opacity-0"}`} onClick={() => setOuvert(false)} />
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-2xl transition-transform duration-300 lg:hidden ${ouvert ? "translate-x-0" : "-translate-x-full"}`}>{contenu}</aside>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-[var(--a-barre)] text-[var(--a-barre-texte)] shadow-2xl transition-transform duration-300 lg:hidden ${ouvert ? "translate-x-0" : "-translate-x-full"}`}>{contenu}</aside>
     </>
   );
 }
